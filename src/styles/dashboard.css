@@ -1,0 +1,189 @@
+/* ===============================
+   BASE
+================================ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #f5f6fa;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ===============================
+   LAYOUT
+================================ */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* ===============================
+   SIDEBAR
+================================ */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -260px;
+  width: 260px;
+  height: 100vh;
+  background: #ffffff;
+  padding: 24px 20px;
+  box-shadow: 6px 0 25px rgba(0,0,0,0.1);
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+
+.app-container.menu-open .sidebar {
+  left: 0;
+}
+
+.sidebar-logo {
+  font-size: 22px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 32px;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.sidebar nav a {
+  text-decoration: none;
+  color: #374151;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.sidebar nav a:hover {
+  color: #7c4dff;
+}
+
+/* ===============================
+   OVERLAY
+================================ */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 900;
+}
+
+.app-container.menu-open .overlay {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ===============================
+   MAIN
+================================ */
+.main-content {
+  flex: 1;
+  width: 100%;
+}
+
+/* ===============================
+   TOPBAR
+================================ */
+.topbar {
+  height: 60px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.hamburger {
+  font-size: 26px;
+  color: #111827; /* PRETO (resolve seu problema) */
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* ===============================
+   DASHBOARD
+================================ */
+.dashboard {
+  padding: 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ===============================
+   STATS
+================================ */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 32px 0;
+}
+
+.stat-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+}
+
+.stat-card span {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.stat-card strong {
+  font-size: 28px;
+  color: #111827;
+}
+
+/* ===============================
+   IA SECTION
+================================ */
+.ai-section {
+  background: #ffffff;
+  padding: 28px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ai-section h2 {
+  margin-bottom: 6px;
+}
+
+.ai-section input {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.btn-primary {
+  background: #7c4dff;
+  color: white;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+/* ===============================
+   DESKTOP
+================================ */
+
+
