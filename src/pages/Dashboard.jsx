@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { IoTimeOutline } from "react-icons/io5";
 import '../styles/dashboard.css'
-
+import Card from '../components/Card';
+import EmojiPicker, { Emoji } from 'emoji-picker-react';
+import { IoMdAdd } from "react-icons/io";
 
 function Dashboard() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -50,27 +53,22 @@ function Dashboard() {
               <p>Organize seus estudos com ajuda da IA</p>
             </div>
           </div>
-
-          <div className="stats-grid">
-            <div className="stat-card">
-              <span>Concursos</span>
-              <strong>0</strong>
+          
+          <section className='recent-section'>
+            <div className='recent-header'>
+              <IoTimeOutline className='recent-icon' />
+              <span className='recent-title'>Atividades Recentes</span>
             </div>
-            <div className="stat-card">
-              <span>Matérias</span>
-              <strong>0</strong>
-            </div>
-            <div className="stat-card">
-              <span>Questões</span>
-              <strong>0</strong>
-            </div>
-            <div className="stat-card">
-              <span>Aproveitamento</span>
-              <strong>0%</strong>
-            </div>
-          </div>
-
-          <div className="ai-section">
+            <ul className='recent-list'>
+              <li className='recent-item'>
+                <Card icon={<IoMdAdd color='#6b7280'/>} title={"Novo conograma"} color={"#7c4dff"} date={"_"}/>
+              </li>
+              <li className='recent-item'>
+                <Card code={"1f3e6"} title={"Banco do brasil"} color={"#FFEF5F"} date={"1 dia atrás"}/>
+              </li>
+            </ul>
+          </section>
+          {/* <div className="ai-section">
             <h2>🎯 Análise de Edital com IA</h2>
 
             <label>Nome do concurso</label>
@@ -86,7 +84,7 @@ function Dashboard() {
             <div className="status">
               Status: aguardando informações
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
