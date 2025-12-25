@@ -182,6 +182,31 @@ body {
   font-size: 15px;
 }
 
+.recent-section {
+  margin-top: 40px;
+}
+
+.recent-section .recent-header {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 16px;
+}
+
+.recent-section .recent-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  list-style-type: none; /* Remove os marcadores (bolinhas) */
+  margin: 0;             /* Remove a margem padrão */
+  padding: 0;
+}
+
+.recent-section .recent-title {
+  font-size: 12pt;
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
 /* ===============================
    DESKTOP
 ================================ */
