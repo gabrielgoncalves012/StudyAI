@@ -194,8 +194,10 @@ body {
 
 .recent-section .recent-list {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 300px));
   gap: 12px;
+  margin-top: 16px;
+  justify-content: flex-start;
   list-style-type: none; /* Remove os marcadores (bolinhas) */
   margin: 0;             /* Remove a margem padrão */
   padding: 0;
