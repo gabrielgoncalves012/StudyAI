@@ -8,7 +8,7 @@ import { IoMdAdd } from "react-icons/io";
 
 function Dashboard() {
   const [menuOpen, setMenuOpen] = useState(false)
-
+   
   return (
     <div className={`app-container ${menuOpen ? 'menu-open' : ''}`}>
 

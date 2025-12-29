@@ -1,15 +1,25 @@
-import express from 'express';
+import express from 'express'
+import cors from 'cors'
 
-const app = express();
+const app = express()
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+app.use(cors({
+  origin: 'http://localhost:5173', // porta do Vite
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}))
+
+// Middlewares
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
 
 app.get('/', (req, res) => {
-    res.send('Express server is running');
-});
+  res.json({ message: 'Express server is running 🚀' })
+})
 
-const PORT = process.env.PORT || 3000;
+
+const PORT = process.env.PORT || 3333
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+  console.log(`Server is running on http://localhost:${PORT}`)
+})
