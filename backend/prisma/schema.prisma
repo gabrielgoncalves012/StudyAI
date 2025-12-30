@@ -13,3 +13,24 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Usuario {
+  id          String       @id @default(uuid())
+  name        String
+  email       String       @unique
+  password    String
+  cronogramas Cronograma[]
+}
+
+model Cronograma {
+  id          String   @id @default(uuid())
+  concurso    String
+  banca       String
+  emojCode    String
+  colorCode   String
+  accessDate  String
+  dateCreated String
+  arquiveHtml String
+  userId      String
+  usuario     Usuario  @relation(fields: [userId], references: [id])
+}
