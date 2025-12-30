@@ -16,8 +16,10 @@
     "prisma": "^6.19.1"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^6.19.1",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^5.2.1"
   }
 }
