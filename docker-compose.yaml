@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:17.2
+    image: postgres
     container_name: postgres-container
     environment:
       POSTGRES_USER: user
