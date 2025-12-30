@@ -20,8 +20,8 @@
 
 ## Use case
 
-![](./public/diagrama%20use_case.svg)
+![](./assets/diagrama%20use_case.svg)
 
 ## Casses
 
-![](./public/diagrama_classe.svg)
+![](./assets/diagrama_classe.svg)
