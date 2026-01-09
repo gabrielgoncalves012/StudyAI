@@ -1,52 +1,463 @@
-.card {
-    background: #ffffff;
+/* CSS MODERNO PARA CARDS TECNOLÓGICOS */
+
+:root {
+    --card-primary: #6366f1;
+    --card-primary-light: #818cf8;
+    --card-secondary: #06b6d4;
+    --card-accent: #8b5cf6;
+    --card-success: #10b981;
+    --card-warning: #f59e0b;
+    --card-bg: #ffffff;
+    --card-border: rgba(226, 232, 240, 0.8);
+    --card-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --card-shadow-md: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+    --card-shadow-lg: 0 10px 40px -4px rgba(0, 0, 0, 0.12);
+    --card-shadow-glow: 0 10px 40px rgba(99, 102, 241, 0.2);
+    --card-glow: 0 0 40px rgba(99, 102, 241, 0.15);
+    --card-gradient-tech: linear-gradient(135deg, 
+      rgba(99, 102, 241, 0.1) 0%, 
+      rgba(139, 92, 246, 0.05) 50%, 
+      rgba(6, 182, 212, 0.08) 100%
+    );
+    --card-border-radius: 16px;
+    --card-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Card Container Moderno */
+  .card {
+    background: var(--card-bg);
     cursor: pointer;
-    border-radius: 0.5rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    max-width: 400px;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-}
-
-.card h3, p {
-    padding: 0.1rem 1rem;
-}
-.card p {
-    color: #6b7280;
-    font-size: 14px;
-}
-.card-title {
-    font-size: 20px;
-    margin-bottom: 10px;
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--card-shadow-md);
+    max-width: 100%;
+    margin-bottom: 0;
+    padding: 1.75rem;
+    border: 1px solid var(--card-border);
+    transition: var(--card-transition);
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(10px);
+  }
+  
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--card-shadow-glow);
+    border-color: rgba(99, 102, 241, 0.3);
+  }
+  
+  /* Efeito de brilho tecnológico no hover */
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    transition: left 0.8s ease;
+    z-index: 1;
+  }
+  
+  .card:hover::before {
+    left: 100%;
+  }
+  
+  /* Header do card com efeito gradiente */
+  .card-header {
+    position: relative;
+    margin-bottom: 1.25rem;
+  }
+  
+  .card-content {
+    height: 4px;
+    border-radius: var(--card-border-radius) var(--card-border-radius) 0 0;
+    background: linear-gradient(90deg, 
+      var(--card-primary) 0%,
+      var(--card-accent) 50%,
+      var(--card-secondary) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    margin: -1.75rem -1.75rem 1.5rem -1.75rem;
+  }
+  
+  .card:hover .card-content {
+    opacity: 1;
+  }
+  
+  /* Container do ícone tecnológico */
+  .card-icon {
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    width: 56px;
+    height: 56px;
+    margin: 0 0 1.25rem 0;
+    position: relative;
+    overflow: hidden;
+    transition: var(--card-transition);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .card-icon::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--card-gradient-tech);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .card:hover .card-icon {
+    transform: scale(1.1) rotate(5deg);
+    border-color: rgba(99, 102, 241, 0.4);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+  }
+  
+  .card:hover .card-icon::after {
+    opacity: 1;
+  }
+  
+  /* Container do emoji tecnológico */
+  .card-emoji {
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    width: 56px;
+    height: 56px;
+    margin: 0 0 1.25rem 0;
+    position: relative;
+    overflow: hidden;
+    transition: var(--card-transition);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    font-size: 1.5rem;
+  }
+  
+  .card-emoji::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--card-gradient-tech);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .card:hover .card-emoji {
+    transform: scale(1.1);
+    border-color: rgba(99, 102, 241, 0.4);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+  }
+  
+  .card:hover .card-emoji::after {
+    opacity: 1;
+  }
+  
+  /* Títulos e textos */
+  .card h3, .card p {
+    padding: 0.1rem 0;
+  }
+  
+  .card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
     color: #111827;
-    font-weight: normal;
-}
-
-.card-content {
-    height: 2rem;
-    border-radius: 1rem 1rem 0 0;
-
-}
-
-.card-icon {
-    border: 1px solid #6b7280;
+    font-weight: 600;
+    line-height: 1.4;
+    transition: color 0.3s ease;
+  }
+  
+  .card:hover h3 {
+    color: var(--card-primary);
+  }
+  
+  .card p {
+    color: #6b7280;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+  }
+  
+  .card-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    color: #111827;
+    font-weight: 600;
+    line-height: 1.4;
+    transition: color 0.3s ease;
+  }
+  
+  .card:hover .card-title {
+    color: var(--card-primary);
+  }
+  
+  /* Data e metadados */
+  .card-date {
+    color: #9ca3af;
+    font-size: 0.875rem;
+    font-weight: 500;
     display: flex;
     align-items: center;
-    justify-content: center;
-    border-radius: 0.5rem;
-    width: 40px;
-    height: 40px;
-    margin: -20px 20px 20px;
-    background: #ffffff;
-}
-
-.card-emoji {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.5rem;
-    width: 40px;
-    height: 40px;
-    margin: -20px 20px 20px;
-
-}
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(229, 231, 235, 0.8);
+  }
+  
+  .card-date::before {
+    content: '⏱';
+    font-size: 0.875rem;
+    opacity: 0.7;
+  }
+  
+  /* Efeito de partículas tecnológicas (opcional) */
+  .card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+      circle at center,
+      transparent 30%,
+      rgba(99, 102, 241, 0.03) 40%,
+      transparent 50%
+    );
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+  }
+  
+  .card:hover::after {
+    opacity: 1;
+  }
+  
+  /* Badge tecnológico */
+  .card-badge {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--card-primary);
+    padding: 0.25rem 0.875rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    backdrop-filter: blur(4px);
+  }
+  
+  .card:hover .card-badge {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Progress bar tecnológica */
+  .card-progress {
+    width: 100%;
+    height: 6px;
+    background: rgba(229, 231, 235, 0.8);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 1rem;
+    position: relative;
+  }
+  
+  .card-progress::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, 
+      var(--card-primary) 0%,
+      var(--card-accent) 50%,
+      var(--card-secondary) 100%
+    );
+    border-radius: 3px;
+    opacity: 0.2;
+  }
+  
+  .card-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, 
+      var(--card-primary) 0%,
+      var(--card-accent) 50%,
+      var(--card-secondary) 100%
+    );
+    border-radius: 3px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 1;
+  }
+  
+  .card-progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    animation: shimmer 2s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  /* Animações de entrada */
+  @keyframes cardAppear {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  .card {
+    animation: cardAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .card {
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    
+    .card-icon,
+    .card-emoji {
+      width: 48px;
+      height: 48px;
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    
+    .card-title {
+      font-size: 1.15rem;
+    }
+    
+    .card h3 {
+      font-size: 1.15rem;
+    }
+    
+    .card-content {
+      margin: -1.5rem -1.5rem 1.25rem -1.5rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .card {
+      padding: 1.25rem;
+      border-radius: 14px;
+    }
+    
+    .card-icon,
+    .card-emoji {
+      width: 44px;
+      height: 44px;
+      font-size: 1.125rem;
+    }
+    
+    .card-title {
+      font-size: 1.1rem;
+    }
+    
+    .card h3 {
+      font-size: 1.1rem;
+    }
+    
+    .card p {
+      font-size: 0.9rem;
+    }
+    
+    .card-content {
+      margin: -1.25rem -1.25rem 1rem -1.25rem;
+    }
+    
+    .card-badge {
+      top: 1.25rem;
+      right: 1.25rem;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.75rem;
+    }
+  }
+  
+  /* Efeito de foco para acessibilidade */
+  .card:focus {
+    outline: 2px solid var(--card-primary);
+    outline-offset: 2px;
+  }
+  
+  .card:focus:not(:focus-visible) {
+    outline: none;
+  }
+  
+  /* Variantes de cores para diferentes tipos de cards */
+  .card-type-study .card-content {
+    background: linear-gradient(90deg, 
+      var(--card-primary) 0%,
+      var(--card-accent) 100%
+    );
+  }
+  
+  .card-type-exam .card-content {
+    background: linear-gradient(90deg, 
+      var(--card-secondary) 0%,
+      #10b981 100%
+    );
+  }
+  
+  .card-type-project .card-content {
+    background: linear-gradient(90deg, 
+      var(--card-accent) 0%,
+      #f59e0b 100%
+    );
+  }
+  
+  /* Efeito de grid pattern sutil */
+  .card-grid-effect {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+  
+  .card:hover .card-grid-effect {
+    opacity: 1;
+  }

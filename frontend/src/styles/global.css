@@ -7,7 +7,7 @@
 }
 
 body {
-  background-color: #f4f6fb;
+  background-color: #ffffff;
   color: #2f3640;
 }
  /* ================= LINKS ================= */
@@ -94,30 +94,7 @@ a {
   }
   
   /* ================= LOGIN ================= */
-  .login-container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
   
-  .login-box {
-    background-color: #ffffff;
-    width: 100%;
-    max-width: 420px;
-    padding: 35px;
-    border-radius: 12px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-  }
-  
-  .login-box h2 {
-    text-align: center;
-    margin-bottom: 25px;
-  }
-  
-  .login-box form div {
-    margin-bottom: 18px;
-  }
   
   /* ================= FORM CONCURSO ================= */
   .concurso-form {
