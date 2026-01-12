@@ -25,12 +25,47 @@ model Usuario {
 model Cronograma {
   id          String   @id @default(uuid())
   concurso    String
-  banca       String
   emojCode    String
   colorCode   String
   accessDate  String
   dateCreated String
-  arquiveHtml String
+  topicLength Int
+  topicFinished Int
+
   userId      String
   usuario     Usuario  @relation(fields: [userId], references: [id])
+
+  disciplinas Disciplina[]
+  planejamentos Planejamento[]
+}
+
+model Disciplina {
+  id          String   @id @default(uuid())
+  name        String
+  length      Int
+  finished   Int
+
+  cronograma_id String
+  cronograma    Cronograma @relation(fields: [cronograma_id], references: [id])
+  
+  topics      Topico[]
+}
+
+model Topico {
+  id            String   @id @default(uuid())
+  name          String
+  finished      Boolean
+
+  disciplina_id String
+  disciplina    Disciplina @relation(fields: [disciplina_id], references: [id])
+}
+
+model Planejamento {
+  id          String   @id @default(uuid())
+  day        Int
+  diciplina   String
+  topics      String[]
+
+  cronograma_id String
+  cronograma    Cronograma @relation(fields: [cronograma_id], references: [id])
 }
