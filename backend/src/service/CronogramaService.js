@@ -86,4 +86,111 @@ export class CronogramaService {
         return response.choices[0].message.content
     }
 
+    async generateCronograma(data) {
+      const prompt = `Você é um assistente especializado em criação de cronogramas de estudo. Sua tarefa é gerar um arquivo JSON puro no seguinte formato padronizado:
+
+FORMATO DE SAÍDA REQUISITADO (JSON):
+{
+  "cargo_area": "string (mesmo valor da entrada)",
+  "horas_estudo_diario": "número (informado pelo usuário)",
+  "cronograma": [
+    {
+      "dia": "número sequencial começando em 1",
+      "disciplina": "nome exato da disciplina",
+      "sessoes": [
+        {
+          "hora": "horário no formato HH:MM",
+          "topico": "tópico específico da disciplina"
+        }
+      ]
+    }
+  ]
+}
+
+REGRAS DE ORGANIZAÇÃO:
+1. Cada dia deve conter APENAS UMA disciplina
+2. Cada tópico deve ocupar UMA sessão de 1 hora
+3. A quantidade de sessões por dia deve corresponder exatamente ao número informado em "horas_estudo_diario"
+4. As disciplinas devem ser distribuídas de forma cíclica para evitar muitos dias consecutivos na mesma matéria
+5. Os horários devem começar às 08:00 e seguir sequencialmente (08:00, 09:00, 10:00, etc.)
+6. Todos os tópicos de todas as disciplinas devem ser alocados
+7. Se necessário, um tópico pode ser dividido em múltiplas sessões se for muito extenso
+
+INSTRUÇÕES:
+- Baseie-se no JSON de entrada fornecido pelo usuário
+- Solicite ao usuário: "Quantas horas por dia você pode estudar?"
+- Após receber o número de horas, processe os dados e gere o cronograma completo
+- Mantenha a estrutura JSON válida e bem formatada
+- Não inclua explicações ou texto adicional, apenas o JSON puro
+
+EXEMPLO DE ENTRADA:
+{
+  "cargo_area": "Analista Judiciário - Área Administrativa",
+  "disciplinas": [
+    {
+      "nome_disciplina": "Direito Administrativo",
+      "topicos": ["Princípios administrativos", "Poderes administrativos"]
+    },
+    {
+      "nome_disciplina": "Português",
+      "topicos": ["Interpretação de texto", "Pontuação"]
+    }
+  ]
+}
+
+EXEMPLO DE SAÍDA (para 2 horas/dia):
+{
+  "cargo_area": "Analista Judiciário - Área Administrativa",
+  "horas_estudo_diario": 2,
+  "cronograma": [
+    {
+      "dia": 1,
+      "disciplina": "Direito Administrativo",
+      "sessoes": [
+        {"hora": "08:00", "topico": "Princípios administrativos (parte 1)"},
+        {"hora": "09:00", "topico": "Princípios administrativos (parte 2)"}
+      ]
+    },
+    {
+      "dia": 2,
+      "disciplina": "Português",
+      "sessoes": [
+        {"hora": "08:00", "topico": "Interpretação de texto (parte 1)"},
+        {"hora": "09:00", "topico": "Interpretação de texto (parte 2)"}
+      ]
+    },
+    {
+      "dia": 3,
+      "disciplina": "Direito Administrativo",
+      "sessoes": [
+        {"hora": "08:00", "topico": "Poderes administrativos (parte 1)"},
+        {"hora": "09:00", "topico": "Poderes administrativos (parte 2)"}
+      ]
+    },
+    {
+      "dia": 4,
+      "disciplina": "Português",
+      "sessoes": [
+        {"hora": "08:00", "topico": "Pontuação (parte 1)"},
+        {"hora": "09:00", "topico": "Pontuação (parte 2)"}
+      ]
+    }
+  ]
+}
+
+      AGUARDE a entrada do usuário com o JSON e a informação sobre horas de estudo diário antes de gerar qualquer saída.`
+      
+      const response = await openai.chat.completions.create({
+          model: "deepseek-chat",
+          messages: [
+              {
+                  role: "user",
+                  content: prompt + `\n\nAqui está o JSON de entrada:\n\n${data.jsonInput}\n\nE o número de horas diárias para estudo é: ${data.horasDiarias}`
+              }
+          ]
+      })
+
+      return response.choices[0].message.content
+    }
+
 }
