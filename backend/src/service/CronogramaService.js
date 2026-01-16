@@ -1,3 +1,4 @@
+import { finished } from "stream";
 import { prisma } from "../config/db.js";
 import { openai } from "../config/deepseek.js";
 import fs from "fs";
@@ -62,7 +63,7 @@ export class CronogramaService {
         }
         `;
 
-        const pdfBuffer = fs.readFileSync(data.pdfPath);
+        const pdfBuffer = fs.readFileSync(data);
         const pdfBase64 = pdfBuffer.toString('base64');
 
         const response = await openai.chat.completions.create({
@@ -87,6 +88,8 @@ export class CronogramaService {
     }
 
     async generateCronograma(data) {
+
+      const inputJson = data;
       const prompt = `Você é um assistente especializado em criação de cronogramas de estudo. Sua tarefa é gerar um arquivo JSON puro no seguinte formato padronizado:
 
 FORMATO DE SAÍDA REQUISITADO (JSON):
@@ -178,7 +181,8 @@ EXEMPLO DE SAÍDA (para 2 horas/dia):
   ]
 }
 
-      AGUARDE a entrada do usuário com o JSON e a informação sobre horas de estudo diário antes de gerar qualquer saída.`
+      Entrada do usuario: 
+      ${data.jsonInput}`
       
       const response = await openai.chat.completions.create({
           model: "deepseek-chat",
@@ -191,6 +195,58 @@ EXEMPLO DE SAÍDA (para 2 horas/dia):
       })
 
       return response.choices[0].message.content
+    }
+
+    async CreateCronograma(dataBody, userId) {
+      try {
+
+        const data = new Date();
+        const accessDate = data.toISOString();
+
+        const {cargo_area, diciplinas} = await this.generateJsonFromEdital(dataBody.pdfPath);
+
+        const cronograma = await prisma.cronograma.create({
+          data: {
+            userId: userId,
+            concurso: dataBody.concurso,
+            emojCode: dataBody.emojCode,
+            accessDate: accessDate,
+            colorCode: dataBody.colorCode,
+            dateCreated: accessDate,
+            topicLength: diciplinas.length,
+            topicFinished: 0
+          }
+        });
+
+        for(const diciplinaData of diciplinas) {
+
+          const diciplina = await prisma.diciplina.create({
+            data: {
+              cronograma_id: cronograma.id,
+              name: diciplinaData.name,
+              length: diciplinaData.length,
+              finished: 0
+            }
+          })
+          
+
+          const topicsMap = diciplinaData.todicos.map(topic => ({
+            name: topic.name,
+            finished: false,
+            diciplina_id: diciplina.id
+          }))
+
+          await prisma.topico.createMany({
+            data: topicsMap
+          })
+        }
+
+        
+        
+
+      } catch (error) {
+        console.log(error);
+      }
     }
 
 }
