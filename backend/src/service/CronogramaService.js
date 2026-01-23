@@ -1,11 +1,13 @@
-import { finished } from "stream";
+import console from "console";
 import { prisma } from "../config/db.js";
 import { openai } from "../config/deepseek.js";
+import { extractTextFromPDF } from "../config/pdfparse.js";
 import fs from "fs";
+// pdfFile, cargo_area, horasDiarias, concurso, emojCode, colorCode
 
 export class CronogramaService {
   
-    async generateJsonFromEdital(data) {
+    async generateJsonFromEdital(data, file) {
         const prompt = `
         Você é um assistente especializado em análise de editais de concursos públicos. Sua tarefa é extrair informações específicas sobre o conteúdo programático de um cargo ou área mencionado pelo usuário.
 
@@ -14,7 +16,7 @@ export class CronogramaService {
         1. **Análise do PDF do Edital:**
            - Leia todo o conteúdo do edital fornecido.
            - Identifique seções relacionadas a "conteúdo programático", "matérias", "disciplinas", "programa" ou equivalentes.
-           - Localize especificamente o cargo/área mencionado pelo usuário (ex: "agente comercial", "técnico administrativo", etc.).
+           - Localize especificamente o cargo de ${data.cargo_area} conforme solicitado pelo usuário.
 
         2. **Estrutura de Extração:**
            - Quando encontrar a área/cargo solicitado, extraia **APENAS** as disciplinas e seus respectivos tópicos/subtópicos.
@@ -61,51 +63,34 @@ export class CronogramaService {
             }
           ]
         }
+
+        Entrada do usuario:
+        Analise o edital e retorne o conteúdo programático para o cargo de ${data.cargo_area}.
         `;
 
-        const pdfBuffer = fs.readFileSync(data);
-        const pdfBase64 = pdfBuffer.toString('base64');
+        extractTextFromPDF(file.buffer);
 
-        const response = await openai.chat.completions.create({
-            model: "deepseek-chat",
-            messages: [
-                {
-                    role: "user",
-                    content: prompt + `\n\nAqui está o conteúdo do edital em formato base64:\n\n${pdfBase64}`
-                },
-                {
-                    type: "file",
-                    file: {
-                        data: pdfBase64,
-                        filename: "edital.pdf",
-                        mime_type: "application/pdf"
-                    }
-                }
-            ]
-        })
+        return 
 
-        return response.choices[0].message.content
+        const cleanedContent = response.choices[0].message.content.replace(/```json|```/g, '').trim();
+        const jsonResponse = JSON.parse(cleanedContent);
+
+        return jsonResponse;
     }
 
     async generateCronograma(data) {
 
-      const inputJson = data;
       const prompt = `Você é um assistente especializado em criação de cronogramas de estudo. Sua tarefa é gerar um arquivo JSON puro no seguinte formato padronizado:
 
 FORMATO DE SAÍDA REQUISITADO (JSON):
 {
   "cargo_area": "string (mesmo valor da entrada)",
-  "horas_estudo_diario": "número (informado pelo usuário)",
+  "horas_estudo_diario": "${data.horasDiarias}",
   "cronograma": [
     {
       "dia": "número sequencial começando em 1",
       "disciplina": "nome exato da disciplina",
-      "sessoes": [
-        {
-          "hora": "horário no formato HH:MM",
-          "topico": "tópico específico da disciplina"
-        }
-      ]
+      "topicos": ["topico 1", "topico 2"]
     }
   ]
 }
@@ -149,69 +134,54 @@ EXEMPLO DE SAÍDA (para 2 horas/dia):
     {
       "dia": 1,
       "disciplina": "Direito Administrativo",
-      "sessoes": [
-        {"hora": "08:00", "topico": "Princípios administrativos (parte 1)"},
-        {"hora": "09:00", "topico": "Princípios administrativos (parte 2)"}
-      ]
+      "topicos": ["Princípios administrativos (parte 1)", "Princípios administrativos (parte 2)"]
     },
     {
       "dia": 2,
       "disciplina": "Português",
-      "sessoes": [
-        {"hora": "08:00", "topico": "Interpretação de texto (parte 1)"},
-        {"hora": "09:00", "topico": "Interpretação de texto (parte 2)"}
-      ]
-    },
-    {
-      "dia": 3,
-      "disciplina": "Direito Administrativo",
-      "sessoes": [
-        {"hora": "08:00", "topico": "Poderes administrativos (parte 1)"},
-        {"hora": "09:00", "topico": "Poderes administrativos (parte 2)"}
-      ]
-    },
-    {
-      "dia": 4,
-      "disciplina": "Português",
-      "sessoes": [
-        {"hora": "08:00", "topico": "Pontuação (parte 1)"},
-        {"hora": "09:00", "topico": "Pontuação (parte 2)"}
-      ]
+      "topicos": ["Interpretação de texto (parte 1)", "Interpretação de texto (parte 2)"]
     }
   ]
 }
 
       Entrada do usuario: 
-      ${data.jsonInput}`
+      ${data}`
       
       const response = await openai.chat.completions.create({
           model: "deepseek-chat",
           messages: [
               {
                   role: "user",
-                  content: prompt + `\n\nAqui está o JSON de entrada:\n\n${data.jsonInput}\n\nE o número de horas diárias para estudo é: ${data.horasDiarias}`
+                  content: prompt + `\n\nAqui está o JSON de entrada:\n\n${data}\n\nE o número de horas diárias para estudo é: ${data.horasDiarias}`
               }
           ]
       })
 
-      return response.choices[0].message.content
+      const cleanedContent = response.choices[0].message.content.replace(/```json|```/g, '').trim();
+      const jsonResponse = JSON.parse(cleanedContent);
+
+      return jsonResponse
     }
 
-    async CreateCronograma(dataBody, userId) {
+    async createCronograma(body, file) {
       try {
 
         const data = new Date();
         const accessDate = data.toISOString();
 
-        const {cargo_area, diciplinas} = await this.generateJsonFromEdital(dataBody.pdfPath);
+        // const {cargo_area, diciplinas} =
+        await this.generateJsonFromEdital(body, file);
+
+        //console.log('Diciplinas:', diciplinas);
+        return;
 
         const cronograma = await prisma.cronograma.create({
           data: {
             userId: userId,
-            concurso: dataBody.concurso,
-            emojCode: dataBody.emojCode,
+            concurso: body.concurso,
+            emojCode: body.emojCode,
             accessDate: accessDate,
-            colorCode: dataBody.colorCode,
+            colorCode: body.colorCode,
             dateCreated: accessDate,
             topicLength: diciplinas.length,
             topicFinished: 0
@@ -242,7 +212,20 @@ EXEMPLO DE SAÍDA (para 2 horas/dia):
         }
 
         
-        
+        const planejamentoGenerated = this.generateCronograma(cronograma);
+
+        for(const day of planejamentoGenerated.cronograma) {
+          await prisma.planejamento.create({
+            data: {
+              cronograma_id: cronograma.id,
+              day: day.dia,
+              diciplina: day.disciplina,
+              topics: JSON.stringify(day.topicos)
+            }
+          })
+        }
+
+        return planejamentoGenerated;
 
       } catch (error) {
         console.log(error);
