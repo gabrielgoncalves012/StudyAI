@@ -13,7 +13,7 @@ export class CronogramaService {
 
         **Instruções:**
 
-        1. **Análise do PDF do Edital:**
+        1. **Análise do Texto Seguinte do edital:**
            - Leia todo o conteúdo do edital fornecido.
            - Identifique seções relacionadas a "conteúdo programático", "matérias", "disciplinas", "programa" ou equivalentes.
            - Localize especificamente o cargo de ${data.cargo_area} conforme solicitado pelo usuário.
@@ -68,12 +68,20 @@ export class CronogramaService {
         Analise o edital e retorne o conteúdo programático para o cargo de ${data.cargo_area}.
         `;
 
-        extractTextFromPDF(file.buffer);
+        const textEdital = await extractTextFromPDF(file.buffer);
 
-        return 
+        const response = await openai.chat.completions.create({
+            model: "deepseek-chat",
+            messages: [
+              {role: "system", content: prompt},
+              {role: "user", content: "Edital: " + textEdital},
+            ]
+        })
 
         const cleanedContent = response.choices[0].message.content.replace(/```json|```/g, '').trim();
         const jsonResponse = JSON.parse(cleanedContent);
+
+        console.log('JSON Response:', jsonResponse);
 
         return jsonResponse;
     }
@@ -170,10 +178,9 @@ EXEMPLO DE SAÍDA (para 2 horas/dia):
         const accessDate = data.toISOString();
 
         // const {cargo_area, diciplinas} =
-        await this.generateJsonFromEdital(body, file);
+        return await this.generateJsonFromEdital(body, file);
 
-        //console.log('Diciplinas:', diciplinas);
-        return;
+      
 
         const cronograma = await prisma.cronograma.create({
           data: {
