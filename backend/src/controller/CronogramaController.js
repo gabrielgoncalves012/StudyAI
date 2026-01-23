@@ -17,6 +17,6 @@ export class CronogramaController {
 
     const cronogramaService = new CronogramaService();
     const response = await cronogramaService.createCronograma(req.body, req.file);
-    res.status(200).json("Cronograma criado com sucesso");//.json(response);
+    res.status(200).json(response);//.json(response);
   }
 }
