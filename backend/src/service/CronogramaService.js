@@ -6,6 +6,24 @@ import fs from "fs";
 // pdfFile, cargo_area, horasDiarias, concurso, emojCode, colorCode
 
 export class CronogramaService {
+
+  async findAllCronogramasByUserId(userId) {
+    try {
+      const cronogramas = await prisma.cronograma.findMany({
+        where: {
+          userId: userId
+        },
+        orderBy: {
+          dateCreated: 'desc'
+        }
+      });
+      return cronogramas;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  
   
   async editCronograma(cronogramaId, body) {
     try {
