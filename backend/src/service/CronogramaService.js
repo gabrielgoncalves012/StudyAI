@@ -7,7 +7,79 @@ import fs from "fs";
 
 export class CronogramaService {
   
-    async generateJsonFromEdital(data, file) {
+  async createCronograma(body, file) {
+    try {
+
+      const date = new Date();
+      const accessDate = date.toISOString();
+
+      const jsonEdital = await this.generateJsonFromEdital(body, file);
+
+      const dataCronograma = {
+        horasDiarias: body.horasDiarias,
+        jsonEdital: jsonEdital
+      }
+
+      const planejamentoGenerated = await this.generateCronograma(dataCronograma);
+
+      const topicsAmount = jsonEdital.disciplinas.reduce((acc, diciplina) => acc + diciplina.topicos.length, 0);
+      
+      const cronograma = await prisma.cronograma.create({
+        data: {
+          userId: body.userId,
+          concurso: body.concurso,
+          emojCode: body.emojCode,
+          accessDate: accessDate,
+          colorCode: body.colorCode,
+          dateCreated: accessDate,
+          topicLength: topicsAmount,
+          topicFinished: 0
+        }
+      });
+
+      for(const diciplinaData of jsonEdital.disciplinas) {
+
+        console.log('Diciplina:', diciplinaData.nome_disciplina);
+
+        const diciplina = await prisma.disciplina.create({
+          data: {
+            cronograma_id: cronograma.id,
+            name: diciplinaData.nome_disciplina,
+            length: diciplinaData.topicos.length,
+            finished: 0
+          }
+        })          
+
+        const topicsMap = diciplinaData.topicos.map(topic => ({
+          name: topic,
+          finished: false,
+          disciplina_id: diciplina.id
+        }))
+
+        await prisma.topico.createMany({
+          data: topicsMap
+        })
+      }
+
+      for(const day of planejamentoGenerated.cronograma) {
+        await prisma.planejamento.create({
+          data: {
+            cronograma_id: cronograma.id,
+            day: day.dia,
+            diciplina: day.disciplina,
+            topics: day.topicos
+          }
+        })
+      }
+
+      return planejamentoGenerated;
+
+    } catch (error) {
+      console.log(error);
+    }
+  }  
+  
+  async generateJsonFromEdital(data, file) {
         const prompt = `
         Você é um assistente especializado em análise de editais de concursos públicos. Sua tarefa é extrair informações específicas sobre o conteúdo programático de um cargo ou área mencionado pelo usuário.
 
@@ -81,8 +153,6 @@ export class CronogramaService {
         const cleanedContent = response.choices[0].message.content.replace(/```json|```/g, '').trim();
         const jsonResponse = JSON.parse(cleanedContent);
 
-        console.log('JSON Response:', jsonResponse);
-
         return jsonResponse;
     }
 
@@ -108,7 +178,6 @@ REGRAS DE ORGANIZAÇÃO:
 2. Cada tópico deve ocupar UMA sessão de 1 hora
 3. A quantidade de sessões por dia deve corresponder exatamente ao número informado em "horas_estudo_diario"
 4. As disciplinas devem ser distribuídas de forma cíclica para evitar muitos dias consecutivos na mesma matéria
-5. Os horários devem começar às 08:00 e seguir sequencialmente (08:00, 09:00, 10:00, etc.)
 6. Todos os tópicos de todas as disciplinas devem ser alocados
 7. Se necessário, um tópico pode ser dividido em múltiplas sessões se for muito extenso
 
@@ -142,25 +211,28 @@ EXEMPLO DE SAÍDA (para 2 horas/dia):
     {
       "dia": 1,
       "disciplina": "Direito Administrativo",
-      "topicos": ["Princípios administrativos (parte 1)", "Princípios administrativos (parte 2)"]
+      "topicos": ["Princípios administrativos", "Poderes administrativos"]
     },
     {
       "dia": 2,
       "disciplina": "Português",
-      "topicos": ["Interpretação de texto (parte 1)", "Interpretação de texto (parte 2)"]
+      "topicos": ["Interpretação de texto", "Pontuação"]
     }
   ]
 }
 
-      Entrada do usuario: 
-      ${data}`
+      `;
       
       const response = await openai.chat.completions.create({
           model: "deepseek-chat",
           messages: [
               {
+                  role: "system",
+                  content: prompt
+              },
+              {
                   role: "user",
-                  content: prompt + `\n\nAqui está o JSON de entrada:\n\n${data}\n\nE o número de horas diárias para estudo é: ${data.horasDiarias}`
+                  content: `Aqui está o conteúdo programático extraído do edital: ${JSON.stringify(data.jsonEdital)}. Por favor, gere o cronograma de estudo considerando que o usuário pode estudar ${data.horasDiarias} horas por dia.`
               }
           ]
       })
@@ -169,74 +241,6 @@ EXEMPLO DE SAÍDA (para 2 horas/dia):
       const jsonResponse = JSON.parse(cleanedContent);
 
       return jsonResponse
-    }
-
-    async createCronograma(body, file) {
-      try {
-
-        const data = new Date();
-        const accessDate = data.toISOString();
-
-        // const {cargo_area, diciplinas} =
-        return await this.generateJsonFromEdital(body, file);
-
-      
-
-        const cronograma = await prisma.cronograma.create({
-          data: {
-            userId: userId,
-            concurso: body.concurso,
-            emojCode: body.emojCode,
-            accessDate: accessDate,
-            colorCode: body.colorCode,
-            dateCreated: accessDate,
-            topicLength: diciplinas.length,
-            topicFinished: 0
-          }
-        });
-
-        for(const diciplinaData of diciplinas) {
-
-          const diciplina = await prisma.diciplina.create({
-            data: {
-              cronograma_id: cronograma.id,
-              name: diciplinaData.name,
-              length: diciplinaData.length,
-              finished: 0
-            }
-          })
-          
-
-          const topicsMap = diciplinaData.todicos.map(topic => ({
-            name: topic.name,
-            finished: false,
-            diciplina_id: diciplina.id
-          }))
-
-          await prisma.topico.createMany({
-            data: topicsMap
-          })
-        }
-
-        
-        const planejamentoGenerated = this.generateCronograma(cronograma);
-
-        for(const day of planejamentoGenerated.cronograma) {
-          await prisma.planejamento.create({
-            data: {
-              cronograma_id: cronograma.id,
-              day: day.dia,
-              diciplina: day.disciplina,
-              topics: JSON.stringify(day.topicos)
-            }
-          })
-        }
-
-        return planejamentoGenerated;
-
-      } catch (error) {
-        console.log(error);
-      }
     }
 
 }
