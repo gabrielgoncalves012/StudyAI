@@ -23,7 +23,108 @@ export class CronogramaService {
     }
   }
 
-  
+  async findCronogramaById(cronogramaId, userId) {
+    try {
+
+      const date = new Date();
+      const accessDate = date.toISOString();
+
+      await prisma.cronograma.update({
+        where: {
+          id: cronogramaId
+        },
+        data: {
+          accessDate: accessDate
+        }
+      });
+
+      const cronograma = await prisma.cronograma.findFirst({
+        where: {
+          id: cronogramaId,
+          userId: userId
+        },
+        orderBy: {
+          dateCreated: 'desc'
+        },
+        include: {
+          disciplinas: {
+            include: {
+              topics: true,
+            }
+          },
+          planejamentos: true
+        }
+      });
+      return cronograma;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async checkTopicCompletion(topicId) {
+    try {
+
+      const finished = await prisma.topico.findUnique({
+        where: {
+          id: topicId
+        }
+      })
+
+      const topic = await prisma.topico.update({
+        where: {
+          id: topicId
+        },
+        data: {
+          finished: !finished.finished
+        }
+      });
+
+      const disciplina = await prisma.disciplina.findUnique({
+        where: {
+          id: topic.disciplina_id
+        },
+        include: {
+          topics: true
+        }
+      });
+
+      const finishedTopicsCount = disciplina.topics.filter(t => t.finished).length;
+
+      await prisma.disciplina.update({
+        where: {
+          id: disciplina.id
+        },
+        data: {
+          finished: finishedTopicsCount
+        }
+      });
+
+      const cronograma = await prisma.cronograma.findUnique({
+        where: {
+          id: disciplina.cronograma_id
+        },
+        include: {
+          disciplinas: true
+        }
+      });
+
+      const totalFinishedTopics = cronograma.disciplinas.reduce((acc, disc) => acc + disc.finished, 0);
+
+      await prisma.cronograma.update({
+        where: {
+          id: cronograma.id
+        },
+        data: {
+          topicFinished: totalFinishedTopics
+        }
+      });
+
+      return topic;
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
   
   async editCronograma(cronogramaId, body) {
     try {
@@ -49,14 +150,14 @@ export class CronogramaService {
       const date = new Date();
       const accessDate = date.toISOString();
 
-      const jsonEdital = await this.generateJsonFromEdital(body, file);
+      const jsonEdital = await this.#generateJsonFromEdital(body, file);
 
       const dataCronograma = {
         horasDiarias: body.horasDiarias,
         jsonEdital: jsonEdital
       }
 
-      const planejamentoGenerated = await this.generateCronograma(dataCronograma);
+      const planejamentoGenerated = await this.#generateCronograma(dataCronograma);
 
       const topicsAmount = jsonEdital.disciplinas.reduce((acc, diciplina) => acc + diciplina.topicos.length, 0);
       
@@ -153,7 +254,7 @@ export class CronogramaService {
 
   }
   
-  async generateJsonFromEdital(data, file) {
+  async #generateJsonFromEdital(data, file) {
         const prompt = `
         Você é um assistente especializado em análise de editais de concursos públicos. Sua tarefa é extrair informações específicas sobre o conteúdo programático de um cargo ou área mencionado pelo usuário.
 
@@ -230,21 +331,21 @@ export class CronogramaService {
         return jsonResponse;
     }
 
-    async generateCronograma(data) {
+  async #generateCronograma(data) {
 
-      const prompt = `Você é um assistente especializado em criação de cronogramas de estudo. Sua tarefa é gerar um arquivo JSON puro no seguinte formato padronizado:
+    const prompt = `Você é um assistente especializado em criação de cronogramas de estudo. Sua tarefa é gerar um arquivo JSON puro no seguinte formato padronizado:
 
 FORMATO DE SAÍDA REQUISITADO (JSON):
 {
-  "cargo_area": "string (mesmo valor da entrada)",
-  "horas_estudo_diario": "${data.horasDiarias}",
-  "cronograma": [
-    {
-      "dia": "número sequencial começando em 1",
-      "disciplina": "nome exato da disciplina",
-      "topicos": ["topico 1", "topico 2"]
-    }
-  ]
+"cargo_area": "string (mesmo valor da entrada)",
+"horas_estudo_diario": "${data.horasDiarias}",
+"cronograma": [
+  {
+    "dia": "número sequencial começando em 1",
+    "disciplina": "nome exato da disciplina",
+    "topicos": ["topico 1", "topico 2"]
+  }
+]
 }
 
 REGRAS DE ORGANIZAÇÃO:
@@ -264,57 +365,57 @@ INSTRUÇÕES:
 
 EXEMPLO DE ENTRADA:
 {
-  "cargo_area": "Analista Judiciário - Área Administrativa",
-  "disciplinas": [
-    {
-      "nome_disciplina": "Direito Administrativo",
-      "topicos": ["Princípios administrativos", "Poderes administrativos"]
-    },
-    {
-      "nome_disciplina": "Português",
-      "topicos": ["Interpretação de texto", "Pontuação"]
-    }
-  ]
+"cargo_area": "Analista Judiciário - Área Administrativa",
+"disciplinas": [
+  {
+    "nome_disciplina": "Direito Administrativo",
+    "topicos": ["Princípios administrativos", "Poderes administrativos"]
+  },
+  {
+    "nome_disciplina": "Português",
+    "topicos": ["Interpretação de texto", "Pontuação"]
+  }
+]
 }
 
 EXEMPLO DE SAÍDA (para 2 horas/dia):
 {
-  "cargo_area": "Analista Judiciário - Área Administrativa",
-  "horas_estudo_diario": 2,
-  "cronograma": [
-    {
-      "dia": 1,
-      "disciplina": "Direito Administrativo",
-      "topicos": ["Princípios administrativos", "Poderes administrativos"]
-    },
-    {
-      "dia": 2,
-      "disciplina": "Português",
-      "topicos": ["Interpretação de texto", "Pontuação"]
-    }
-  ]
+"cargo_area": "Analista Judiciário - Área Administrativa",
+"horas_estudo_diario": 2,
+"cronograma": [
+  {
+    "dia": 1,
+    "disciplina": "Direito Administrativo",
+    "topicos": ["Princípios administrativos", "Poderes administrativos"]
+  },
+  {
+    "dia": 2,
+    "disciplina": "Português",
+    "topicos": ["Interpretação de texto", "Pontuação"]
+  }
+]
 }
 
-      `;
-      
-      const response = await openai.chat.completions.create({
-          model: "deepseek-chat",
-          messages: [
-              {
-                  role: "system",
-                  content: prompt
-              },
-              {
-                  role: "user",
-                  content: `Aqui está o conteúdo programático extraído do edital: ${JSON.stringify(data.jsonEdital)}. Por favor, gere o cronograma de estudo considerando que o usuário pode estudar ${data.horasDiarias} horas por dia.`
-              }
-          ]
-      })
+    `;
+    
+    const response = await openai.chat.completions.create({
+        model: "deepseek-chat",
+        messages: [
+            {
+                role: "system",
+                content: prompt
+            },
+            {
+                role: "user",
+                content: `Aqui está o conteúdo programático extraído do edital: ${JSON.stringify(data.jsonEdital)}. Por favor, gere o cronograma de estudo considerando que o usuário pode estudar ${data.horasDiarias} horas por dia.`
+            }
+        ]
+    })
 
-      const cleanedContent = response.choices[0].message.content.replace(/```json|```/g, '').trim();
-      const jsonResponse = JSON.parse(cleanedContent);
+    const cleanedContent = response.choices[0].message.content.replace(/```json|```/g, '').trim();
+    const jsonResponse = JSON.parse(cleanedContent);
 
-      return jsonResponse
-    }
+    return jsonResponse
+  }
 
 }
