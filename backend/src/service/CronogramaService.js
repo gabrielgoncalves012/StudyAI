@@ -7,6 +7,24 @@ import fs from "fs";
 
 export class CronogramaService {
   
+  async editCronograma(cronogramaId, body) {
+    try {
+      const updatedCronograma = await prisma.cronograma.update({
+        where: {
+          id: cronogramaId
+        },
+        data: {
+          emojCode: body.emojCode,
+          colorCode: body.colorCode,
+          concurso: body.concurso
+        }
+      });
+      return updatedCronograma;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async createCronograma(body, file) {
     try {
 
@@ -79,48 +97,35 @@ export class CronogramaService {
     }
   }
 
-  async deleteCronograma(concursoId, userId) {
+  async deleteCronograma(cronogramaId) {
     
     try {
       // Delete all related "planejamento" records
-      await prisma.planejamento.deleteMany({
-        where: {
-          cronograma: {
-            concurso: concursoId,
-            userId: userId
-          }
-        }
-      });
-
-      // Delete all related "topico" records
       await prisma.topico.deleteMany({
         where: {
-          disciplina: {
-            cronograma: {
-              concurso: concursoId,
-              userId: userId
-            }
-          }
+          cronograma_id: cronogramaId
         }
-      });
+      })
 
-      // Delete all related "disciplina" records
       await prisma.disciplina.deleteMany({
         where: {
-          cronograma: {
-            concurso: concursoId,
-            userId: userId
-          }
+          cronograma_id: cronogramaId
+        }
+      })
+
+      await prisma.planejamento.deleteMany({
+        where: {
+          cronograma_id: cronogramaId
         }
       });
 
-      // Delete the "cronograma" record
-      await prisma.cronograma.deleteMany({
+      await prisma.cronograma.delete({
         where: {
-          concurso: concursoId,
-          userId: userId
+          id: cronogramaId
         }
       });
+
+      return { message: "Cronograma deletado"}
 
       return { message: "Concurso and related data deleted successfully." };
     } catch (error) {
