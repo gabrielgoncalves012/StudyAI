@@ -37,6 +37,7 @@ model Cronograma {
 
   disciplinas Disciplina[]
   planejamentos Planejamento[]
+  topicos     Topico[]
 }
 
 model Disciplina {
@@ -58,6 +59,8 @@ model Topico {
 
   disciplina_id String
   disciplina    Disciplina @relation(fields: [disciplina_id], references: [id])
+  cronograma_id String
+  cronograma     Cronograma @relation(fields: [cronograma_id], references: [id])
 }
 
 model Planejamento {
