@@ -77,7 +77,58 @@ export class CronogramaService {
     } catch (error) {
       console.log(error);
     }
-  }  
+  }
+
+  async deleteCronograma(concursoId, userId) {
+    
+    try {
+      // Delete all related "planejamento" records
+      await prisma.planejamento.deleteMany({
+        where: {
+          cronograma: {
+            concurso: concursoId,
+            userId: userId
+          }
+        }
+      });
+
+      // Delete all related "topico" records
+      await prisma.topico.deleteMany({
+        where: {
+          disciplina: {
+            cronograma: {
+              concurso: concursoId,
+              userId: userId
+            }
+          }
+        }
+      });
+
+      // Delete all related "disciplina" records
+      await prisma.disciplina.deleteMany({
+        where: {
+          cronograma: {
+            concurso: concursoId,
+            userId: userId
+          }
+        }
+      });
+
+      // Delete the "cronograma" record
+      await prisma.cronograma.deleteMany({
+        where: {
+          concurso: concursoId,
+          userId: userId
+        }
+      });
+
+      return { message: "Concurso and related data deleted successfully." };
+    } catch (error) {
+      console.log(error);
+      throw new Error("Failed to delete concurso and related data.");
+    }
+
+  }
   
   async generateJsonFromEdital(data, file) {
         const prompt = `
