@@ -17,7 +17,7 @@ router.post('/api/usuarios/signin', usuarioController.signIn.bind(usuarioControl
 router.post('/api/generate-question', verify, questoesController.generateQuestion.bind(questoesController));
 
 router.post('/api/cronograma', upload.single('file'), cronogramaController.generateCronograma.bind(cronogramaController));
-router.get('/api/cronogramas', cronogramaController.findAllCronogramas.bind(cronogramaController));
+router.get('/api/cronogramas', verify, cronogramaController.findAllCronogramas.bind(cronogramaController));
 router.get('/api/cronograma/:id', cronogramaController.findCronogramaById.bind(cronogramaController));
 router.get('/api/cronograma/topico/:topicoId', cronogramaController.checkTopicCompletion.bind(cronogramaController));
 router.get('/api/cronograma/:id', cronogramaController.editCronograma.bind(cronogramaController));

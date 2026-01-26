@@ -17,6 +17,10 @@ export class CronogramaService {
           dateCreated: 'desc'
         }
       });
+
+      if(!cronogramas) {
+        return { message: "Nenhum cronograma encontrado"}
+      }
       return cronogramas;
     } catch (error) {
       console.log(error);
@@ -31,7 +35,8 @@ export class CronogramaService {
 
       await prisma.cronograma.update({
         where: {
-          id: cronogramaId
+          id: cronogramaId,
+          userId: userId
         },
         data: {
           accessDate: accessDate
@@ -55,6 +60,10 @@ export class CronogramaService {
           planejamentos: true
         }
       });
+
+      if(!cronograma) {
+        return { message: "Cronograma não encontrado"}
+      }
       return cronograma;
     } catch (error) {
       console.log(error);
@@ -126,11 +135,12 @@ export class CronogramaService {
     }
   }
   
-  async editCronograma(cronogramaId, body) {
+  async editCronograma(cronogramaId, body, user_id) {
     try {
       const updatedCronograma = await prisma.cronograma.update({
         where: {
-          id: cronogramaId
+          id: cronogramaId,
+          userId: user_id
         },
         data: {
           emojCode: body.emojCode,
@@ -138,13 +148,18 @@ export class CronogramaService {
           concurso: body.concurso
         }
       });
+
+      if(!updatedCronograma) {
+        return { message: "Cronograma não encontrado"}
+      }
+
       return updatedCronograma;
     } catch (error) {
       console.log(error);
     }
   }
 
-  async createCronograma(body, file) {
+  async createCronograma(body, file, userId) {
     try {
 
       const date = new Date();
@@ -163,7 +178,7 @@ export class CronogramaService {
       
       const cronograma = await prisma.cronograma.create({
         data: {
-          userId: body.userId,
+          userId: userId,
           concurso: body.concurso,
           emojCode: body.emojCode,
           accessDate: accessDate,
@@ -216,9 +231,22 @@ export class CronogramaService {
     }
   }
 
-  async deleteCronograma(cronogramaId) {
+  async deleteCronograma(cronogramaId, userId) {
     
     try {
+
+      const isExistsCronogram = await prisma.cronograma.findFirst({
+        where: {
+          id: cronogramaId,
+          userId: userId
+        }
+      })
+
+      if(!isExistsCronogram) {
+        return { message: "Cronograma não encontrado"}
+      }
+
+
       // Delete all related "planejamento" records
       await prisma.topico.deleteMany({
         where: {

@@ -17,6 +17,7 @@ const verifyJwt = (req, res, next) => {
 
         const decoded = jsonwebtoken.verify(token, SECRET_KEY);
         req.user = decoded;
+        req.user_id = decoded.userId; // Adiciona o ID do usuário ao objeto req
         next();
     } catch (err) {
         return res.status(403).json({ message: 'Token invalido.', error: err.message });
