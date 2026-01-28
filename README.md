@@ -5,6 +5,9 @@
 ![Static Badge](https://img.shields.io/badge/Licen%C3%A7a-MIT-green)
 ![](https://img.shields.io/badge/Status-EmDesenvolvimento-yellow)
 
+## Documentação da API
+[APIDOC](./backend/APIDOC.md)
+
 ## Funcionalidades ✨
 
 ### Cronograma Inteligente 📋
@@ -16,7 +19,15 @@
 - Geração de questões com IA baseadas em questões de concuros passados
 
 ## Tecnologias utilizadas 🛠️ 
-(A definir)
+- javascript
+- node.js
+- react.js
+- express
+- cors
+- openai
+- pdf-parser
+- jsonwebtoken
+-multer
 
 ## Use case
 
