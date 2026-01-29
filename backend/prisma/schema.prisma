@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id          String       @id @default(uuid())
+  name        String
+  email       String       @unique
+  password    String
+  cronogramas Cronograma[]
+}
+
+model Cronograma {
+  id          String   @id @default(uuid())
+  concurso    String
+  emojCode    String
+  colorCode   String
+  accessDate  String
+  dateCreated String
+  topicLength Int
+  topicFinished Int
+
+  userId      String
+  usuario     Usuario  @relation(fields: [userId], references: [id])
+
+  disciplinas Disciplina[]
+  planejamentos Planejamento[]
+  topicos     Topico[]
+}
+
+model Disciplina {
+  id          String   @id @default(uuid())
+  name        String
+  length      Int
+  finished   Int
+
+  cronograma_id String
+  cronograma    Cronograma @relation(fields: [cronograma_id], references: [id])
+  
+  topics      Topico[]
+}
+
+model Topico {
+  id            String   @id @default(uuid())
+  name          String
+  finished      Boolean
+
+  disciplina_id String
+  disciplina    Disciplina @relation(fields: [disciplina_id], references: [id])
+  cronograma_id String
+  cronograma     Cronograma @relation(fields: [cronograma_id], references: [id])
+}
+
+model Planejamento {
+  id          String   @id @default(uuid())
+  day        Int
+  diciplina   String
+  topics      String[]
+
+  cronograma_id String
+  cronograma    Cronograma @relation(fields: [cronograma_id], references: [id])
+}

@@ -5,10 +5,11 @@ import '../styles/dashboard.css'
 import Card from '../components/Card';
 import EmojiPicker, { Emoji } from 'emoji-picker-react';
 import { IoMdAdd } from "react-icons/io";
+import { FaBars, FaTimes } from 'react-icons/fa'; // Font Awesome
 
 function Dashboard() {
   const [menuOpen, setMenuOpen] = useState(false)
-
+   
   return (
     <div className={`app-container ${menuOpen ? 'menu-open' : ''}`}>
 
@@ -39,17 +40,17 @@ function Dashboard() {
             className="hamburger"
             onClick={() => setMenuOpen(!menuOpen)}
           >
-            ☰
+            <FaBars size={24} />
           </button>
 
-          <span className="topbar-title">Dashboard</span>
+          
         </header>
 
         {/* Conteúdo */}
         <div className="dashboard">
           <div className="dashboard-header">
             <div>
-              <h1>Olá, Estudante 👋</h1>
+              <h1>Olá, Estudante!👋</h1>
               <p>Organize seus estudos com ajuda da IA</p>
             </div>
           </div>
@@ -61,10 +62,10 @@ function Dashboard() {
             </div>
             <ul className='recent-list'>
               <li className='recent-item'>
-                <Card icon={<IoMdAdd color='#6b7280'/>} title={"Novo conograma"} color={"#7c4dff"} date={"_"}/>
+                <Card icon={<IoMdAdd color='#6b7280'/>} title={"Novo Conograma"} color={"#7c4dff"} date={""}/>
               </li>
               <li className='recent-item'>
-                <Card code={"1f3e6"} title={"Banco do brasil"} color={"#FFEF5F"} date={"1 dia atrás"}/>
+                <Card code={"1f3e6"} title={"Banco do Brasil"} color={"#FFEF5F"} date={"1 dia atrás"}/>
               </li>
             </ul>
           </section>
