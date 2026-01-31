@@ -13,6 +13,7 @@ const cronogramaController = new CronogramaController();
 
 router.post('/api/usuarios', usuarioController.createUser.bind(usuarioController));
 router.post('/api/usuarios/signin', usuarioController.signIn.bind(usuarioController));
+router.post('/api/usuarios/verify', usuarioController.verifyEmail.bind(usuarioController));
 
 router.post('/api/generate-question', verify, questoesController.generateQuestion.bind(questoesController));
 
