@@ -19,7 +19,20 @@ model Usuario {
   name        String
   email       String       @unique
   password    String
+  verified   Boolean      @default(false)
   cronogramas Cronograma[]
+  tokens      VerificationToken[]
+}
+
+model VerificationToken {
+  id         String   @id @default(uuid())
+  codigo      String   @unique
+  email     String
+  userId     String
+  tentativas Int      @default(0)
+  usuario    Usuario  @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime
 }
 
 model Cronograma {
