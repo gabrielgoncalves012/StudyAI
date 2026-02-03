@@ -8,4 +8,12 @@ export class QuestoesController {
         const response = await new QuestoesService().generateQuestion(body);
         res.status(200).json(response);
     }
+
+    async autoCompleteQuestion(req, res) {
+        req.setTimeout(300000); // 5 minutes
+        res.setTimeout(300000); // 5 minutes
+        const body = req.body;
+        const response = await new QuestoesService().autoCompleteQuestion(body);
+        res.status(200).json(response);
+    }
 }
