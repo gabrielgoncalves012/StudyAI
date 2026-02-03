@@ -85,3 +85,16 @@ model Planejamento {
   cronograma_id String
   cronograma    Cronograma @relation(fields: [cronograma_id], references: [id])
 }
+
+model Questoes {
+  id          String   @id @default(uuid())
+  enunciado   String
+  alternativas      String[]
+  banca      String
+  correta    String
+  ano_aproximado Int
+  dificuldade String
+  topico_especifico String
+  disciplina String
+  topico String
+}
