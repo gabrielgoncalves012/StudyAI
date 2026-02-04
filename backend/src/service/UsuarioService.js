@@ -3,12 +3,13 @@ import dotenv from 'dotenv';
 import { hash, compare } from 'bcrypt';
 import { prisma } from '../config/db.js';
 import jwt from 'jsonwebtoken';
+import { EmailService } from './EmailService.js';
 //import e from 'express';
 
 export class UsuarioService {
 
   async createUser(data) {
-    console.log('Service: ', data);
+
     const userExists = await prisma.usuario.findUnique({ where: { email: data.email } });
     console.log(userExists);
     if (userExists != null) {
@@ -21,13 +22,22 @@ export class UsuarioService {
     console.log('Password hashed.', passwordHash);
     data.password = passwordHash;
 
-    return prisma.usuario.create({ data });
+    const user = await prisma.usuario.create({ data });
+
+    const emailService = new EmailService();
+    emailService.sendMessageVerification(data.email, user.id);
+
+    return { ok: true };
   }
 
   async signIn(data) {
     const user = await prisma.usuario.findUnique({ where: { email: data.email } });
     if (!user) {
       throw new Error('Usuário não encontrado');
+    }
+
+    if (!user.verified) {
+      throw new Error('Usuário ainda nao verificado');
     }
     
     const passwordMatch = await compare(data.password, user.password);
@@ -47,5 +57,44 @@ export class UsuarioService {
       token: token
     };
 
+  }
+
+  async verifyEmail(email, code) {
+    const record = await prisma.verificationToken.findUnique({
+      where: {
+        email: email,
+        codigo: code,
+        
+        expiresAt: {
+          gt: new Date()
+        }
+      }
+    });
+
+    if (!record) {
+      throw new Error('Código de verificação inválido ou expirado');
+    }
+
+    var tentativas = record.tentativas + 1;
+
+    await prisma.verificationToken.update({
+      where: { id: record.id },
+      data: { tentativas: tentativas }
+    });
+
+    if (record.tentativas >= 5) {
+      throw new Error('Tentativas de verificação excedidas');
+    }
+
+    await prisma.usuario.update({
+      where: { id: record.userId },
+      data: { verified: true }
+    });
+
+    await prisma.verificationToken.deleteMany({
+      where: { userId: record.userId }
+    });
+
+    return { ok: true };
   }
 }

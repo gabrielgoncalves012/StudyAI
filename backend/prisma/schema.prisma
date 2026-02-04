@@ -19,7 +19,20 @@ model Usuario {
   name        String
   email       String       @unique
   password    String
+  verified   Boolean      @default(false)
   cronogramas Cronograma[]
+  tokens      VerificationToken[]
+}
+
+model VerificationToken {
+  id         String   @id @default(uuid())
+  codigo      String   @unique
+  email     String
+  userId     String
+  tentativas Int      @default(0)
+  usuario    Usuario  @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime
 }
 
 model Cronograma {
@@ -71,4 +84,17 @@ model Planejamento {
 
   cronograma_id String
   cronograma    Cronograma @relation(fields: [cronograma_id], references: [id])
+}
+
+model Questoes {
+  id          String   @id @default(uuid())
+  enunciado   String
+  alternativas      String[]
+  banca      String
+  correta    String
+  ano_aproximado Int
+  dificuldade String
+  topico_especifico String
+  disciplina String
+  topico String
 }
