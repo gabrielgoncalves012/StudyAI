@@ -16,6 +16,8 @@ router.post('/api/usuarios/signin', usuarioController.signIn.bind(usuarioControl
 router.post('/api/usuarios/verify', usuarioController.verifyEmail.bind(usuarioController));
 
 router.post('/api/generate-question', verify, questoesController.generateQuestion.bind(questoesController));
+router.get('/api/disciplines', questoesController.findAllDiscpipline.bind(questoesController));
+router.post('/api/questions', questoesController.findAllTopicsByDiscipline.bind(questoesController));
 
 router.post('/api/cronograma', verify, upload.single('file'), cronogramaController.generateCronograma.bind(cronogramaController));
 router.get('/api/cronogramas', verify, cronogramaController.findAllCronogramas.bind(cronogramaController));
