@@ -9,11 +9,16 @@ export class QuestoesController {
         res.status(200).json(response);
     }
 
-    async autoCompleteQuestion(req, res) {
+    async findAllTopicsByDiscipline(req, res) {
         req.setTimeout(300000); // 5 minutes
         res.setTimeout(300000); // 5 minutes
         const body = req.body;
-        const response = await new QuestoesService().autoCompleteQuestion(body);
+        const response = await new QuestoesService().findAllTopicsByDiscipline(body);
+        res.status(200).json(response);
+    }
+
+    async findAllDiscpipline(req, res) {
+        const response = await new QuestoesService().findAllDiscpipline();
         res.status(200).json(response);
     }
 }
