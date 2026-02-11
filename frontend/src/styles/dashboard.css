@@ -431,6 +431,56 @@ body {
   margin-top: auto;
 }
 
+.cronogram-sending {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.cronogram-sending p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.form-cronograma {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-cronograma .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-cronograma label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.color-options{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+}
+
+.color-option{
+  width: 100%;
+  height: 60px;
+  border-radius: 8px;
+}
+
+.color-option:hover{
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
 .card-date::before {
   content: '🕒';
   font-size: 0.85rem;
