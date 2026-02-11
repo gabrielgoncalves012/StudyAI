@@ -6,12 +6,100 @@ import Card from '../components/Card';
 import EmojiPicker, { Emoji } from 'emoji-picker-react';
 import { IoMdAdd } from "react-icons/io";
 import { FaBars, FaTimes } from 'react-icons/fa'; // Font Awesome
+import Modal from '../components/Modal';
+import { CronogramaService } from '../services/CronogramaService/CronogramService';
 
 function Dashboard() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
+  const [cronogramSending, setCronogramSending] = useState(false)
+  const colors = ["cd001a", "ef6a00", "f2cd00", "79c300", "1961ae", "61007d"]
+  const [file, setFile] = useState(null)
+  const [title, setTitle] = useState("")
+  const [cargoArea, setCargoArea] = useState("")
+  const [horasDiarias, setHorasDiarias] = useState(0)
+  const [colorSelected, setColorSelected] = useState(colors[0])
+  const [emojCode, setEmojiCode] = useState("1f3e6")
+
+  const handleCraateCronograma = async () => {
+    // setCronogramSending(true)
+    // const formData = new FormData();
+    // formData.append('file', file);
+    // formData.append('concurso', title);
+    // formData.append('cargo_area', cargoArea);
+    // formData.append('horasDiarias', horasDiarias);
+    // formData.append('colorCode', colorSelected);
+    // formData.append('emojiCode', emojCode);
+    // formData.append('userId', "5f2469ad-acb1-4a42-8943-1481f6d3ca8e") // Substitua pelo ID do usuário autenticado
+
+    const cronogramaService = new CronogramaService();
+    console.log(await cronogramaService.findAllCronogramas())
+    // const res = await cronogramaService.createCronograma(formData)
+    // console.log(res)
+    // setModalOpen(false)
+    // setCronogramSending(false)
+  }
    
   return (
     <div className={`app-container ${menuOpen ? 'menu-open' : ''}`}>
+      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
+        {cronogramSending ? (
+          <div className='cronogram-sending'>
+            <h2>Gerando Cronograma...</h2>
+            <p>Isso pode levar um tempo, dependendo do tamanho do edital. Aguarde...</p>
+          </div>
+        ): (        
+          <div className='form-cronograma'>
+            <h2>Criar Novo Cronograma</h2>
+
+            <div className='form-group'>
+              <label>Edital</label>
+              <input type="file" onChange={(e) => setFile(e.target.files[0])}/>
+            </div>
+
+            <div className='form-group'>
+              <label>Nome do Cronograma</label>
+              <input placeholder="Ex: Cronograma para Polícia Federal" onChange={(e) => setTitle(e.target.value)}/>
+            </div>
+
+            <div className='form-group'>
+              <label>Nome exato do cargo</label>
+              <input placeholder="Ex: Agente" onChange={(e) => setCargoArea(e.target.value)}/>
+            </div>
+
+            <div className='form-group'>
+              <label>Quantidade de horas por dia de estudo</label>
+              <input placeholder="Ex: Cronograma para Polícia Federal" type='number' onChange={(e) => setHorasDiarias(e.target.value)}/>
+            </div>
+
+            <div className='color-picker'>
+                <label>Cor do Cronograma</label>
+                <div className='color-options'>
+                  {colors.map(color => (
+                  <div key={color} className='color-option' style={{backgroundColor: `#${color}`, color: `#${color}`, border: color === colorSelected ? '4px solid black' : 'none'}} onClick={() => setColorSelected(color)}> .</div>
+                ))}
+                </div>
+            </div>
+
+            <div>
+              <label>Emoji</label>
+
+              <button onClick={() => setEmojiPickerOpen(!emojiPickerOpen)}>
+                {emojiPickerOpen ? <EmojiPicker onEmojiClick={(emoji) => {
+                  setEmojiCode(emoji.unified)
+                  setEmojiPickerOpen(false)
+                }} /> : <Emoji unified={emojCode} size={24} />}
+              </button>
+              
+            </div>
+
+            <button className="btn-primary" onClick={handleCraateCronograma}>
+              Criar Cronograma
+            </button>
+          </div>
+        )}
+      </Modal>
 
       {/* Sidebar */}
       <aside className={`sidebar ${menuOpen ? 'open' : ''}`}>
@@ -62,7 +150,7 @@ function Dashboard() {
             </div>
             <ul className='recent-list'>
               <li className='recent-item'>
-                <Card icon={<IoMdAdd color='#6b7280'/>} title={"Novo Conograma"} color={"#7c4dff"} date={""}/>
+                <Card icon={<IoMdAdd color='#6b7280'/>} title={"Novo Conograma"} onClick={() => setModalOpen(true)} color={"#7c4dff"} date={""}/>
               </li>
               <li className='recent-item'>
                 <Card code={"1f3e6"} title={"Banco do Brasil"} color={"#FFEF5F"} date={"1 dia atrás"}/>
