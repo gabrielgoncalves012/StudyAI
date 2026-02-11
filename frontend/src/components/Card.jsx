@@ -1,9 +1,9 @@
 import { Emoji } from 'emoji-picker-react'
 import '../styles/card.css'
 
-export default function Card({id, title, date, code, icon, color }) {
+export default function Card({id, title, date, code, icon, color, onClick }) {
   return (
-    <div className="card" key={id}>
+    <div onClick={onClick} className="card" key={id}>
       <div className='card-content' style={{backgroundColor: color}}>
 
       </div>
