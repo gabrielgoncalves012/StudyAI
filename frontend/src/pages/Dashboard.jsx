@@ -8,6 +8,7 @@ import { IoMdAdd } from "react-icons/io";
 import { FaBars, FaTimes } from 'react-icons/fa'; // Font Awesome
 import Modal from '../components/Modal';
 import { CronogramaService } from '../services/CronogramaService/CronogramService';
+import { useQuery } from '@tanstack/react-query';
 
 function Dashboard() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -21,6 +22,14 @@ function Dashboard() {
   const [horasDiarias, setHorasDiarias] = useState(0)
   const [colorSelected, setColorSelected] = useState(colors[0])
   const [emojCode, setEmojiCode] = useState("1f3e6")
+
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['cronogramas'],
+      queryFn: async () => {
+        const cronogramaService = new CronogramaService();
+        return await cronogramaService.findAllCronogramas()
+      }
+  })
 
   const handleCraateCronograma = async () => {
     // setCronogramSending(true)
@@ -152,9 +161,15 @@ function Dashboard() {
               <li className='recent-item'>
                 <Card icon={<IoMdAdd color='#6b7280'/>} title={"Novo Conograma"} onClick={() => setModalOpen(true)} color={"#7c4dff"} date={""}/>
               </li>
-              <li className='recent-item'>
-                <Card code={"1f3e6"} title={"Banco do Brasil"} color={"#FFEF5F"} date={"1 dia atrás"}/>
-              </li>
+
+              {isLoading && <p>Carregando cronogramas...</p>}
+              {error && <p>Erro ao carregar cronogramas: {error.message}</p>}
+              {data && data.map(cronograma => (
+                <li key={cronograma.id} className='recent-item'>
+                  <Card code={cronograma.emojCode} title={cronograma.concurso} color={`#${cronograma.colorCode}`} date={cronograma.accessDate}/>
+                </li>
+              ))}
+
             </ul>
           </section>
           {/* <div className="ai-section">
