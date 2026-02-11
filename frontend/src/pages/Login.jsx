@@ -1,23 +1,16 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
-import { AuthContext } from "../context/AuthContext";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    if (email && senha) {
-      login();
-      navigate("/dashboard");
-    } else {
-      alert("Preencha todos os campos");
-    }
+    
   }
 
   return (
