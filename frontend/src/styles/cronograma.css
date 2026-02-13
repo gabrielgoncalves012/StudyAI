@@ -89,14 +89,14 @@
     border: none;
 }
 
-.progresso-container {
+.progresso-container, .cronograma-container {
     box-shadow: var(--card-shadow-lg);
     border-radius: 8px;
     padding: 2rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    
+    margin-bottom: 2rem;
 }
 
 .progresso-container .progresso-topicos{
@@ -124,4 +124,51 @@
     font-size: 1.5rem;
     font-weight: 600;
     color: #1e272e;
+}
+
+.cronograma-container .header-cronograma-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cronograma-container .header-cronograma-container .start-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+
+}
+
+.cronograma-container .header-cronograma-container .end-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cronograma-container .header-cronograma-container .end-container button {
+    background-color: var(--card-primary-light);
+    border: none;
+    border-radius: 8px;
+    padding: 0.7rem;
+    color: var(--card-bg);
+    font-size: 1.5rem;
+    font-weight: 600;
+    box-shadow: var(--card-shadow-md);
+}
+
+.cronograma-container .header-cronograma-container .end-container button:hover {
+    background-color: var(--card-primary);
+}
+
+.cronograma-container .icon {
+    font-size: 1.5rem;
+    background-color: #f4c02533;
+    padding: 0.7rem;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow-md);
 }
