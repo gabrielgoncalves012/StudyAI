@@ -150,21 +150,6 @@
     gap: 1rem;
 }
 
-.cronograma-container .header-cronograma-container .end-container button {
-    background-color: var(--card-primary-light);
-    border: none;
-    border-radius: 8px;
-    padding: 0.7rem;
-    color: var(--card-bg);
-    font-size: 1.5rem;
-    font-weight: 600;
-    box-shadow: var(--card-shadow-md);
-}
-
-.cronograma-container .header-cronograma-container .end-container button:hover {
-    background-color: var(--card-primary);
-}
-
 .cronograma-container .icon {
     font-size: 1.5rem;
     background-color: #f4c02533;

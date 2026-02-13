@@ -105,26 +105,6 @@ export default function Cronograma() {
                 </article>
 
                 <article className="cronograma-container">
-                    <div className="header-cronograma-container">
-                        <div className="start-container">
-                            <div className="icon">
-                                <IoCalendarClearOutline/>
-                            </div>
-                            <div>
-                                <h2 style={{'margin-bottom': '5px'}}>Cronograma semanal</h2>
-                                <span>Planejamento de x semanas</span>
-                            </div>
-                        </div>
-                        <div className="end-container">
-                            <button>
-                                <GoChevronLeft/>
-                            </button>
-                            <span>Samana x</span>
-                            <button>
-                                <GoChevronRight/>
-                            </button>
-                        </div>
-                    </div>
 
                      <WeeklyPlanner planejamentos={data.planejamentos}/>
 

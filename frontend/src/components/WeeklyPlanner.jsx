@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import '../styles/weeklyPlanner.css';
+import { IoCalendarClearOutline } from 'react-icons/io5';
+import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
 
 const WeeklyPlanner = ({ planejamentos }) => {
   const [currentWeek, setCurrentWeek] = useState(0);
@@ -78,30 +80,32 @@ const WeeklyPlanner = ({ planejamentos }) => {
   return (
     <div className="weekly-planner">
 
-
-
-      <div className="planner-header">
-        <h1>📅 Planejamento Semanal</h1>
-        <div className="week-navigation">
-          <button 
+      <div className="header-cronograma-container">
+        <div className="start-container">
+            <div className="icon">
+                <IoCalendarClearOutline/>
+            </div>
+            <div>
+                <h2 style={{'margin-bottom': '5px'}}>Cronograma semanal</h2>
+                <span>Planejamento de {Math.ceil(diasComPlanejamento.length / 7)} semanas</span>
+            </div>
+        </div>
+        <div className="end-container">
+            <button
             onClick={semanaAnterior} 
             disabled={!temSemanaAnterior}
-            className="nav-button"
-          >
-            ← Semana Anterior
-          </button>
-          <span className="week-info">
-            Semana {currentWeek + 1} de {Math.ceil(diasComPlanejamento.length / 7)}
-          </span>
-          <button 
+            >
+                <GoChevronLeft/>
+            </button>
+            <span>Semana {currentWeek + 1} de {Math.ceil(diasComPlanejamento.length / 7)}</span>
+            <button
             onClick={proximaSemana} 
             disabled={!temProximaSemana}
-            className="nav-button"
-          >
-            Próxima Semana →
-          </button>
+            >
+                <GoChevronRight/>
+            </button>
         </div>
-      </div>
+    </div>
 
       <div className="week-grid">
         {diasDaSemanaAtual.map((dia, index) => {

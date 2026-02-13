@@ -1,58 +1,38 @@
 /* WeeklyPlanner.css */
+
 .weekly-planner {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
   
-  .planner-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  
-  .planner-header h1 {
-    color: #333;
-    margin: 0;
-    font-size: 2rem;
-  }
-  
-  .week-navigation {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    background: #f5f5f5;
-    padding: 10px 20px;
-    border-radius: 50px;
-  }
-  
-  .nav-button {
-    padding: 8px 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+  .cronograma-container .header-cronograma-container .end-container button {
+    background-color: var(--card-primary-light);
     border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
+    border-radius: 8px;
+    padding: 0.7rem;
+    color: var(--card-bg);
+    font-size: 1.5rem;
+    font-weight: 600;
+    box-shadow: var(--card-shadow-md);
     transition: all 0.3s ease;
-  }
-  
-  .nav-button:hover:not(:disabled) {
+}
+
+.cronograma-container .header-cronograma-container .end-container button:disabled {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    background-color: #57606f;
+    cursor: not-allowed ;
   }
-  
-  .nav-button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+
+  .cronograma-container .header-cronograma-container .end-container button:hover:disabled {
+    transform: translateY(-2px);
+    background-color: #57606f;
+    
   }
+
+.cronograma-container .header-cronograma-container .end-container button:hover {
+    background-color: var(--card-primary);
+}
   
   .week-info {
     font-weight: 500;
@@ -63,31 +43,26 @@
   
   .week-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 15px;
   }
   
   .day-card {
-    background: white;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    min-height: 400px;
+    min-height: 300px;
+    border: 1px solid #ddd;
     display: flex;
     flex-direction: column;
   }
   
-  .day-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-  }
-  
   .day-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 15px;
-    text-align: center;
   }
   
   .day-header h2 {
