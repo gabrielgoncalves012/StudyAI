@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { IoTimeOutline } from "react-icons/io5";
 import '../styles/dashboard.css'
 import Card from '../components/Card';
@@ -22,6 +22,8 @@ function Dashboard() {
   const [horasDiarias, setHorasDiarias] = useState(0)
   const [colorSelected, setColorSelected] = useState(colors[0])
   const [emojCode, setEmojiCode] = useState("1f3e6")
+
+  const navigate = useNavigate()
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['cronogramas'],
@@ -166,7 +168,7 @@ function Dashboard() {
               {error && <p>Erro ao carregar cronogramas: {error.message}</p>}
               {data && data.map(cronograma => (
                 <li key={cronograma.id} className='recent-item'>
-                  <Card code={cronograma.emojCode} title={cronograma.concurso} color={`#${cronograma.colorCode}`} date={cronograma.accessDate}/>
+                  <Card code={cronograma.emojCode} title={cronograma.concurso} color={`#${cronograma.colorCode}`} date={cronograma.accessDate} onClick={() => navigate(`/cronograma/${cronograma.id}`)}/>
                 </li>
               ))}
 
