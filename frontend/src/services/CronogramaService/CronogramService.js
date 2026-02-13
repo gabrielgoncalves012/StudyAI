@@ -12,6 +12,18 @@ export class CronogramaService {
             
         }
     }
+
+    async findCronogramaById(id) {
+        try {
+            useJwtToken()
+            const response = await api.get(`/cronograma/${id}`)
+            console.log('Response data:', response.data)
+            return response.data;
+            
+        } catch(error) {
+
+        }
+    }
     async createCronograma(cronograma) {
         try {
             const response = await api.post('/cronograma/', cronograma, {
