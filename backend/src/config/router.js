@@ -21,7 +21,7 @@ router.post('/api/questions', questoesController.findAllTopicsByDiscipline.bind(
 
 router.post('/api/cronograma', verify, upload.single('file'), cronogramaController.generateCronograma.bind(cronogramaController));
 router.get('/api/cronogramas', verify, cronogramaController.findAllCronogramas.bind(cronogramaController));
-router.get('/api/cronograma/:id', cronogramaController.findCronogramaById.bind(cronogramaController));
-router.get('/api/cronograma/topico/:topicoId', cronogramaController.checkTopicCompletion.bind(cronogramaController));
-router.get('/api/cronograma/:id', cronogramaController.editCronograma.bind(cronogramaController));
-router.delete('/api/cronograma/:id', cronogramaController.deleteCronograma.bind(cronogramaController));
+router.get('/api/cronograma/:id', verify, cronogramaController.findCronogramaById.bind(cronogramaController));
+router.get('/api/cronograma/topico/:topicoId', verify, cronogramaController.checkTopicCompletion.bind(cronogramaController));
+router.get('/api/cronograma/:id', verify, cronogramaController.editCronograma.bind(cronogramaController));
+router.delete('/api/cronograma/:id', verify, cronogramaController.deleteCronograma.bind(cronogramaController));
