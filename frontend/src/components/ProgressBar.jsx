@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function ProgressBar({ feito, total, color }) {
+export default function ProgressBar({ feito, total, color, mini }) {
 
     const [progress, setProgress] = useState(0);
 
@@ -21,7 +21,7 @@ export default function ProgressBar({ feito, total, color }) {
     const progressBarStyle = {
         width: `100%`,
         backgroundColor: '#e0e0e0',
-        height: '20px',
+        height: mini? '10px' : '20px',
         'border-radius': '10px',
         'overflow': 'hidden'
     };

@@ -4,7 +4,8 @@ import { CronogramaService } from "../services/CronogramaService/CronogramServic
 import { IoBookOutline, IoTimeOutline, IoCalendarClearOutline } from "react-icons/io5";
 import { FiTarget } from "react-icons/fi";
 import { GrBook } from "react-icons/gr";
-import { GoTrophy, GoChevronLeft, GoChevronRight } from "react-icons/go";
+import { GoTrophy, } from "react-icons/go";
+import { FaRegCircleCheck, FaRegCircle } from "react-icons/fa6";
 import { PiChartLineUp } from "react-icons/pi";
 import '../styles/cronograma.css'
 import ProgressBar from "../components/ProgressBar";
@@ -13,6 +14,14 @@ import WeeklyPlanner from "../components/WeeklyPlanner";
 
 export default function Cronograma() {
     const {id} = useParams()
+    const [openDisciplinas, setOpenDisciplinas] = useState({});
+
+    const toggleDisciplina = (id) => {
+        setOpenDisciplinas(prev => ({
+            ...prev,
+            [id]: !prev[id]
+        }));
+    };
 
     const { data, isLoading, error, refetch } = useQuery({
         queryKey: ['cronograma'],
@@ -107,6 +116,48 @@ export default function Cronograma() {
                 <article className="cronograma-container">
 
                      <WeeklyPlanner planejamentos={data.planejamentos}/>
+
+                </article>
+
+                <article className="list-container">
+                    <h2>Conteúdo programatico</h2>
+
+                     <div className="disciplinas-container">
+
+                        {data.disciplinas.map((disciplina) => {
+
+                            return (
+                                <div className="disciplina-container" key={disciplina.id} onClick={() => toggleDisciplina(disciplina.id)}>
+                                <div className="disciplina-header">
+                                    <div>
+                                        <div className="disciplina-icon">
+                                            <GrBook color={"#"+data.colorCode}/>
+                                        </div>
+                                        <div>
+                                            <h3>{disciplina.name}</h3>
+                                            <span>{disciplina.finished} de {disciplina.length} tópicos</span>
+                                        </div>
+                                    </div>
+                                    <div className="disciplina-progress">
+                                        <ProgressBar mini={true} color={"#"+data.colorCode} feito={disciplina.finished} total={disciplina.length} />
+                                    </div>
+                                </div>
+                                <ol className="disciplina-content" style={{ display: openDisciplinas[disciplina.id] ? 'flex' : 'none' }}>
+                                    {
+                                        disciplina.topics.map((topic) => (
+                                            <li className="topic-item" style={topic.finished ? { background: '#57ce892a' } : { background: '#edf0f380' }} key={topic.id}>
+                                                <div>{topic.finished ? <FaRegCircleCheck color="#2eb867"/> : <FaRegCircle color="#65758b"/>}</div>
+                                                <span>{topic.name}</span>
+                                            </li>
+                                        ))
+                                    }
+                                </ol>
+                            </div>
+                            )
+
+                        })}
+
+                     </div>
 
                 </article>
 

@@ -157,3 +157,62 @@
     border-radius: 8px;
     box-shadow: var(--card-shadow-md);
 }
+
+.cronograma .list-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.cronograma .list-container .disciplinas-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 0.7rem;
+}
+
+.cronograma .list-container .disciplinas-container .disciplina-container {
+    box-shadow: var(--card-shadow-md);
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.cronograma .list-container .disciplinas-container .disciplina-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cronograma .list-container .disciplinas-container .disciplina-header .disciplina-progress {
+    width: 100px;
+}
+
+.cronograma .list-container ol {
+    list-style: none;
+    padding: 1.5rem 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cronograma .list-container .topic-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background-color: #edf0f380;
+}
+
+.cronograma .list-container .topic-item:hover {
+    background-color: #edf0f3;
+    transform: translateY(-2px);
+}
