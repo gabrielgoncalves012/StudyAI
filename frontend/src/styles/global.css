@@ -111,10 +111,10 @@ a {
   }
   
   /* ================= CRONOGRAMA ================= */
-  .cronograma {
+  /* .cronograma {
     list-style: none;
     margin-top: 25px;
-  }
+  } */
   
   .cronograma li {
     background-color: #ffffff;
