@@ -38,6 +38,7 @@ model VerificationToken {
 model Cronograma {
   id          String   @id @default(uuid())
   concurso    String
+  cargo       String @default("")
   emojCode    String
   colorCode   String
   accessDate  String

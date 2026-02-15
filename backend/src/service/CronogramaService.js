@@ -54,7 +54,14 @@ export class CronogramaService {
         include: {
           disciplinas: {
             include: {
-              topics: true,
+              topics: {
+                orderBy: {
+                  id: 'asc'
+                }
+              },
+            },
+            orderBy: {
+              id: 'asc'
             }
           },
           planejamentos: true
@@ -179,6 +186,7 @@ export class CronogramaService {
       const cronograma = await prisma.cronograma.create({
         data: {
           userId: userId,
+          cargo: body.cargo_area,
           concurso: body.concurso,
           emojCode: body.emojCode,
           accessDate: accessDate,
