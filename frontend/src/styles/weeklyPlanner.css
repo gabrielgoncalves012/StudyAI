@@ -43,7 +43,7 @@
   
   .week-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 15px;
   }
   
@@ -135,9 +135,9 @@
   }
   
   /* Responsividade */
-  @media (max-width: 1200px) {
+  @media (max-width: 1000px) {
     .week-grid {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
     }
   }
   
@@ -154,6 +154,30 @@
     .week-navigation {
       flex-wrap: wrap;
       justify-content: center;
+    }
+
+    .weekly-planner {
+      gap: 1rem;
+    }
+
+    .cronograma-container .header-cronograma-container .end-container button {
+      font-size: 1rem;
+    }
+
+    .cronograma-container span {
+      font-size: 0.8rem;
+    }
+
+    .cronograma-container h2 {
+      font-size: 1rem;
+    }
+
+    .cronograma-container h3 {
+      font-size: 0.8rem;
+    }
+
+    .cronograma-container li {
+      font-size: 0.7rem;
     }
   }
   

@@ -13,8 +13,13 @@ import { useEffect, useState } from "react";
 import WeeklyPlanner from "../components/WeeklyPlanner";
 
 export default function Cronograma() {
+
+    const cronogramaService = new CronogramaService();
+
     const {id} = useParams()
     const [openDisciplinas, setOpenDisciplinas] = useState({});
+    const [disciplinas, setDisciplinas] = useState([]);
+    const [topicFinished, setTopicFinished] = useState(0);
 
     const toggleDisciplina = (id) => {
         setOpenDisciplinas(prev => ({
@@ -26,8 +31,10 @@ export default function Cronograma() {
     const { data, isLoading, error, refetch } = useQuery({
         queryKey: ['cronograma'],
           queryFn: async () => {
-            const cronogramaService = new CronogramaService();
-            return await cronogramaService.findCronogramaById(id)
+            const data = await cronogramaService.findCronogramaById(id)
+            setDisciplinas(data.disciplinas)
+            setTopicFinished(data.topicFinished)
+            return data
           }
       })
 
@@ -43,6 +50,11 @@ export default function Cronograma() {
         'background-color': "#"+data.colorCode
     }
 
+    async function checkTopic(id) {
+        await cronogramaService.checkTopic(id)
+        refetch()
+    }
+
     return (
         <div className="cronograma">
             <header className="header-container" style={HeaderStyle}>
@@ -51,7 +63,7 @@ export default function Cronograma() {
                     <div className="icon"><FiTarget/></div>                    
                 </span>
                 <h1>{data.concurso}</h1>
-                <span className="subtitle">Cargo, esqueci de por no banco de dados</span>
+                <span className="subtitle">{data.cargo}</span>
 
                 <section className="disciplinas">
                     {/* no maximo 4 */}
@@ -78,7 +90,7 @@ export default function Cronograma() {
                 <article className="progresso-container">
                         <h2>Seu progresso</h2>
                         <div>
-                            <ProgressBar feito={data.topicFinished} total={data.topicLength} color={"#"+data.colorCode}/>
+                            <ProgressBar feito={topicFinished} total={data.topicLength} color={"#"+data.colorCode}/>
                                 
                         </div>
                         <section className="progresso-topicos">
@@ -87,28 +99,28 @@ export default function Cronograma() {
                                     <GrBook color={"#"+data.colorCode}/>
                                 </div>
                                 <span className="value">{data.topicLength}</span>                                
-                                <span>Total de topicos</span>
+                                <span className="label">Total de topicos</span>
                             </div>
                             <div className="item-progress">
                                 <div className="icon">
                                     <GoTrophy color="#2eb867"/>
                                 </div>
                                 <span className="value">{data.topicFinished}</span>                                
-                                <span>Concluidos</span>
+                                <span className="label">Concluidos</span>
                             </div>
                             <div className="item-progress">
                                 <div className="icon">
                                     <IoTimeOutline color="#65758b"/>
                                 </div>
                                 <span className="value">{Number(data.topicLength) - Number(data.topicFinished)}</span>                                
-                                <span>Restantes</span>
+                                <span className="label">Restantes</span>
                             </div>
                             <div className="item-progress">
                                 <div className="icon">
                                     <PiChartLineUp color="#f4c025"/>
                                 </div>
                                 <span className="value">10%</span>
-                                <span>Progresso</span>
+                                <span className="label">Progresso</span>
                             </div>
                         </section>
                 </article>
@@ -124,12 +136,12 @@ export default function Cronograma() {
 
                      <div className="disciplinas-container">
 
-                        {data.disciplinas.map((disciplina) => {
+                        {disciplinas.map((disciplina) => {
 
                             return (
-                                <div className="disciplina-container" key={disciplina.id} onClick={() => toggleDisciplina(disciplina.id)}>
-                                <div className="disciplina-header">
-                                    <div>
+                                <div className="disciplina-container" key={disciplina.id}>
+                                <div className="disciplina-header" key={disciplina.id} onClick={() => toggleDisciplina(disciplina.id)}>
+                                    <div className="disciplina-info">
                                         <div className="disciplina-icon">
                                             <GrBook color={"#"+data.colorCode}/>
                                         </div>
@@ -145,7 +157,7 @@ export default function Cronograma() {
                                 <ol className="disciplina-content" style={{ display: openDisciplinas[disciplina.id] ? 'flex' : 'none' }}>
                                     {
                                         disciplina.topics.map((topic) => (
-                                            <li className="topic-item" style={topic.finished ? { background: '#57ce892a' } : { background: '#edf0f380' }} key={topic.id}>
+                                            <li className="topic-item" onClick={() => checkTopic(topic.id)} style={topic.finished ? { background: '#57ce892a' } : { background: '#edf0f380' }} key={topic.id}>
                                                 <div>{topic.finished ? <FaRegCircleCheck color="#2eb867"/> : <FaRegCircle color="#65758b"/>}</div>
                                                 <span>{topic.name}</span>
                                             </li>
@@ -162,6 +174,10 @@ export default function Cronograma() {
                 </article>
 
             </main>
+
+            <footer className="footer">
+                <p>📖 Bons estudos! Mantenha a consistência e alcance sua aprovação no {data.concurso}.</p>
+            </footer>
         </div>
     )
 }

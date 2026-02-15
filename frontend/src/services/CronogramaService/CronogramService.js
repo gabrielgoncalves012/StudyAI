@@ -24,6 +24,19 @@ export class CronogramaService {
 
         }
     }
+
+    async checkTopic(id) {
+        try {
+            
+            useJwtToken()
+            await api.get(`/cronograma/topico/${id}/`)
+            
+
+        } catch (error) {
+            
+        }
+    }
+
     async createCronograma(cronograma) {
         try {
             const response = await api.post('/cronograma/', cronograma, {

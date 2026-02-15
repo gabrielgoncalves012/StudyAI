@@ -7,7 +7,7 @@ export default function ProgressBar({ feito, total, color, mini }) {
     useEffect(() => {
         const progresso = calcularProgresso(feito, total);
         setProgress(progresso);
-    }, [progress])
+    }, [progress, feito])
 
     function calcularProgresso(feito, total) {
         // Evita divisão por zero
