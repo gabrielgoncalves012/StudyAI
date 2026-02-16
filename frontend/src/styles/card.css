@@ -179,6 +179,27 @@
     line-height: 1.4;
     transition: color 0.3s ease;
   }
+
+  .card .card-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .card .btn-clear {
+    font-size: var(--icons-size-md);
+    color: #9ca3af;
+    padding: 1rem;
+    border-radius: 100%;
+    transition: 0.5s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .card .btn-clear:hover {
+    background-color: #eceef1;
+  }
   
   .card:hover h3 {
     color: var(--card-primary);
