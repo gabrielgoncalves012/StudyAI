@@ -10,12 +10,16 @@ import Modal from '../components/Modal';
 import { CronogramaService } from '../services/CronogramaService/CronogramService';
 import { useQuery } from '@tanstack/react-query';
 
+const cronogramaService = new CronogramaService();
+
 function Dashboard() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
+  const [modalDeleteOpen, setModalDeleteOpen] = useState(false)
+  const [cronogramDeleteId, setCronogramDeleteId] = useState()
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
   const [cronogramSending, setCronogramSending] = useState(false)
-  const colors = ["cd001a", "ef6a00", "f2cd00", "79c300", "1961ae", "61007d"]
+  const colors = ["43aa8b", "b1a7a6", "f2cd00", "161a1d", "1961ae", "61007d"]
   const [file, setFile] = useState(null)
   const [title, setTitle] = useState("")
   const [cargoArea, setCargoArea] = useState("")
@@ -34,26 +38,48 @@ function Dashboard() {
   })
 
   const handleCraateCronograma = async () => {
-    // setCronogramSending(true)
-    // const formData = new FormData();
-    // formData.append('file', file);
-    // formData.append('concurso', title);
-    // formData.append('cargo_area', cargoArea);
-    // formData.append('horasDiarias', horasDiarias);
-    // formData.append('colorCode', colorSelected);
-    // formData.append('emojiCode', emojCode);
-    // formData.append('userId', "5f2469ad-acb1-4a42-8943-1481f6d3ca8e") // Substitua pelo ID do usuário autenticado
+    setCronogramSending(true)
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('concurso', title);
+    formData.append('cargo_area', cargoArea);
+    formData.append('horasDiarias', horasDiarias);
+    formData.append('colorCode', colorSelected);
+    formData.append('emojCode', emojCode);
+    
+    const res = await cronogramaService.createCronograma(formData)
+    console.log(res)
+    setModalOpen(false)
+    setCronogramSending(false)
+    refetch()
+  }
 
-    const cronogramaService = new CronogramaService();
-    console.log(await cronogramaService.findAllCronogramas())
-    // const res = await cronogramaService.createCronograma(formData)
-    // console.log(res)
-    // setModalOpen(false)
-    // setCronogramSending(false)
+  const handleDeleteCronograma = (id) => {
+    setCronogramDeleteId(id)
+    setModalDeleteOpen(true)
+  }
+
+  const confirmDeleteCronogram = async () => {
+    await cronogramaService.deleteCronograma(cronogramDeleteId)
+    setCronogramDeleteId("")
+    setModalDeleteOpen(false)
+    refetch()
   }
    
   return (
     <div className={`app-container ${menuOpen ? 'menu-open' : ''}`}>
+      <Modal isOpen={modalDeleteOpen} onClose={() => setModalDeleteOpen(false)}>
+        <div className='modal-delete'>
+          <h2>Tem certeza de que deseja excluir o cronograma?</h2>
+          <div className='buttons'>
+            <button onClick={confirmDeleteCronogram}>Confirmar</button>
+            <button style={{backgroundColor: "red"}} onClick={() => {
+              setCronogramDeleteId("")
+              setModalDeleteOpen(false)
+            }}>Cancelar</button>
+          </div>
+        </div>
+      </Modal>
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
         {cronogramSending ? (
           <div className='cronogram-sending'>
@@ -168,29 +194,12 @@ function Dashboard() {
               {error && <p>Erro ao carregar cronogramas: {error.message}</p>}
               {data && data.map(cronograma => (
                 <li key={cronograma.id} className='recent-item'>
-                  <Card code={cronograma.emojCode} title={cronograma.concurso} color={`#${cronograma.colorCode}`} date={cronograma.accessDate} onClick={() => navigate(`/cronograma/${cronograma.id}`)}/>
+                  <Card code={cronograma.emojCode} title={cronograma.concurso} color={`#${cronograma.colorCode}`} date={cronograma.accessDate} onClick={() => navigate(`/cronograma/${cronograma.id}`)} onDelete={()=> handleDeleteCronograma(cronograma.id)}/>
                 </li>
               ))}
 
             </ul>
           </section>
-          {/* <div className="ai-section">
-            <h2>🎯 Análise de Edital com IA</h2>
-
-            <label>Nome do concurso</label>
-            <input placeholder="Ex: Polícia Federal 2025" />
-
-            <label>Link do edital (opcional)</label>
-            <input placeholder="Cole o link do edital" />
-
-            <button className="btn-primary">
-              Analisar com IA
-            </button>
-
-            <div className="status">
-              Status: aguardando informações
-            </div>
-          </div> */}
         </div>
       </div>
     </div>
