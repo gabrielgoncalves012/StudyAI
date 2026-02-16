@@ -50,4 +50,12 @@ export class CronogramaService {
             throw error;
         }
     }
+
+    async deleteCronograma(id) {
+        try {
+            await api.delete(`/cronograma/${id}/`)
+        } catch (error) {
+            
+        }
+    }
 }
