@@ -71,12 +71,12 @@
     margin: 0;
     padding: 0;
     font-size: var(--h1-font-size);
-    color: #1e272e;
+    color: #ffffff;
 }
 
 .header-container .subtitle {
     font-size: var(--h2-font-size);
-    color: #57606f;
+    color: #767b83;
     margin: 0;
 }
 

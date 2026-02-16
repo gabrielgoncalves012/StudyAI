@@ -43,6 +43,27 @@ body {
   min-height: 100vh;
 }
 
+.modal-delete {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  z-index: 9999;
+}
+
+.modal-delete h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  
+}
+
+.modal-delete .buttons {
+  display: flex;
+  gap: 1rem;
+}
+
 .app-container {
   display: flex;
   min-height: 100vh;
