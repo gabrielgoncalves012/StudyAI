@@ -213,7 +213,8 @@ export class CronogramaService {
         const topicsMap = diciplinaData.topicos.map(topic => ({
           name: topic,
           finished: false,
-          disciplina_id: diciplina.id
+          disciplina_id: diciplina.id,
+          cronograma_id: cronograma.id
         }))
 
         await prisma.topico.createMany({
