@@ -26,6 +26,7 @@ function Dashboard() {
   const [horasDiarias, setHorasDiarias] = useState(0)
   const [colorSelected, setColorSelected] = useState(colors[0])
   const [emojCode, setEmojiCode] = useState("1f3e6")
+  const [messageFormIncomplete, setMessageFormIncomplete] = useState(false)
 
   const navigate = useNavigate()
 
@@ -38,6 +39,12 @@ function Dashboard() {
   })
 
   const handleCraateCronograma = async () => {
+
+    if(file === null || title === "" || cargoArea === "" || horasDiarias === 0 || colorSelected === "" || emojCode === "") {
+      setMessageFormIncomplete(true)
+      return
+    }
+
     setCronogramSending(true)
     const formData = new FormData();
     formData.append('file', file);
@@ -47,8 +54,7 @@ function Dashboard() {
     formData.append('colorCode', colorSelected);
     formData.append('emojCode', emojCode);
     
-    const res = await cronogramaService.createCronograma(formData)
-    console.log(res)
+    await cronogramaService.createCronograma(formData)
     setModalOpen(false)
     setCronogramSending(false)
     refetch()
@@ -84,7 +90,7 @@ function Dashboard() {
         {cronogramSending ? (
           <div className='cronogram-sending'>
             <h2>Gerando Cronograma...</h2>
-            <p>Isso pode levar um tempo, dependendo do tamanho do edital. Aguarde...</p>
+            <p>Isso pode levar até 5 minutos, dependendo do tamanho do edital. Aguarde...</p>
           </div>
         ): (        
           <div className='form-cronograma'>
@@ -134,6 +140,12 @@ function Dashboard() {
             <button className="btn-primary" onClick={handleCraateCronograma}>
               Criar Cronograma
             </button>
+
+            {messageFormIncomplete && (
+              <p className="error-message" style={{ color: 'red' }}>
+                Por favor, preencha todos os campos.
+              </p>
+            )}
           </div>
         )}
       </Modal>
