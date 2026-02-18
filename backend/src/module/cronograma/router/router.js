@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { UsuarioController } from "../controller/UsuarioContorller.js";
-import verify from "../middlewares/verifyJwt.js";
+
+import verify from "../../../shared/middlewares/verifyJwt.js";
+import upload from "../utils/multer.js";
 import { QuestoesController } from "../controller/QuestoesController.js";
-import upload from "./multer.js";
+import { UsuarioController } from "../controller/UsuarioContorller.js";
 import { CronogramaController } from "../controller/CronogramaController.js";
 
-export const router = Router();
+const router = Router();
 
 const usuarioController = new UsuarioController();
 const questoesController = new QuestoesController();
@@ -25,3 +26,7 @@ router.get('/api/cronograma/:id', verify, cronogramaController.findCronogramaByI
 router.get('/api/cronograma/topico/:topicoId', verify, cronogramaController.checkTopicCompletion.bind(cronogramaController));
 router.get('/api/cronograma/:id', verify, cronogramaController.editCronograma.bind(cronogramaController));
 router.delete('/api/cronograma/:id', verify, cronogramaController.deleteCronograma.bind(cronogramaController));
+
+export default  {
+    router
+}

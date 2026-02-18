@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { prisma } from '../config/db.js';
+import { prisma } from '../../../shared/config/db.js';
 
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,

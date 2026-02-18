@@ -1,5 +1,5 @@
-import { openai } from "../config/deepseek.js";
-import { prisma } from '../config/db.js'
+import { openai } from "../utils/deepseek.js";
+import { prisma } from '../../../shared/config/db.js';
 
 export class QuestoesService {
 

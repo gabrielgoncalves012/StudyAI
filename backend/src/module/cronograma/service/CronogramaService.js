@@ -1,9 +1,6 @@
-import console from "console";
-import { prisma } from "../config/db.js";
-import { openai } from "../config/deepseek.js";
-import { extractTextFromPDF } from "../config/pdfparse.js";
-import fs from "fs";
-// pdfFile, cargo_area, horasDiarias, concurso, emojCode, colorCode
+import { prisma } from '../../../shared/config/db.js';
+import { openai } from "../utils/deepseek.js";
+import { extractTextFromPDF } from "../utils/pdfparse.js";
 
 export class CronogramaService {
 
@@ -23,7 +20,7 @@ export class CronogramaService {
       }
       return cronogramas;
     } catch (error) {
-      console.log(error);
+      return { message: "Erro ao buscar cronogramas"}
     }
   }
 
@@ -73,7 +70,9 @@ export class CronogramaService {
       }
       return cronograma;
     } catch (error) {
-      console.log(error);
+      return {
+        message: "Erro ao buscar cronograma"
+      }
     }
   }
 
@@ -138,7 +137,9 @@ export class CronogramaService {
       return topic;
 
     } catch (error) {
-      console.log(error);
+      return {
+        message: "Erro ao marcar topico como concluido"
+      }
     }
   }
   
@@ -162,7 +163,7 @@ export class CronogramaService {
 
       return updatedCronograma;
     } catch (error) {
-      console.log(error);
+      throw new Error("Erro ao editar cronograma")
     }
   }
 
@@ -199,8 +200,6 @@ export class CronogramaService {
 
       for(const diciplinaData of jsonEdital.disciplinas) {
 
-        console.log('Diciplina:', diciplinaData.nome_disciplina);
-
         const diciplina = await prisma.disciplina.create({
           data: {
             cronograma_id: cronograma.id,
@@ -236,7 +235,7 @@ export class CronogramaService {
       return planejamentoGenerated;
 
     } catch (error) {
-      console.log(error);
+      throw new Error("Erro ao gerar cronograma")
     }
   }
 
@@ -283,9 +282,7 @@ export class CronogramaService {
 
       return { message: "Cronograma deletado"}
 
-      return { message: "Concurso and related data deleted successfully." };
     } catch (error) {
-      console.log(error);
       throw new Error("Failed to delete concurso and related data.");
     }
 

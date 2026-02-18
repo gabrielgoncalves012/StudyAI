@@ -1,25 +1,22 @@
 import dotenv from 'dotenv';
 
 import { hash, compare } from 'bcrypt';
-import { prisma } from '../config/db.js';
+import { prisma } from '../../../shared/config/db.js';
 import jwt from 'jsonwebtoken';
 import { EmailService } from './EmailService.js';
-//import e from 'express';
+
 
 export class UsuarioService {
 
   async createUser(data) {
 
     const userExists = await prisma.usuario.findUnique({ where: { email: data.email } });
-    console.log(userExists);
     if (userExists != null) {
       throw new Error('Usuário já cadastrado');
     }
 
-    console.log('Hashing password...');
 
     const passwordHash = await hash(data.password, 10);
-    console.log('Password hashed.', passwordHash);
     data.password = passwordHash;
 
     const user = await prisma.usuario.create({ data });
