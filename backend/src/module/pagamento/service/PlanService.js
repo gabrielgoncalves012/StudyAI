@@ -52,7 +52,21 @@ export default class PlanService {
 
     async getAllPlans() {
         try {
-            const plans = await prisma.plan.findMany()
+            const plans = await prisma.plan.findMany({
+                where: {
+                    actived: true,
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    price: true,
+                    codigo: true,
+                    resources: true,
+                    actived: true,
+                    dateCreated: true,
+                    dateUpdated: true
+                }
+            })
             return plans
         } catch (error) {
             return {

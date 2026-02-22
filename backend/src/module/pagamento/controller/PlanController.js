@@ -12,4 +12,14 @@ export default class PlanController {
         }
     }
 
+    async findAllPlans(req, res) {
+        try {
+            const planService = new PlanService();
+            const plans = await planService.getAllPlans();
+            res.status(200).json(plans);
+        } catch (error) {
+            res.status(500).json({ error: 'Failed to retrieve plans', details: error.message });
+        }
+    }
+
 }
