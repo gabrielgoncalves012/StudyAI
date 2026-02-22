@@ -20,6 +20,8 @@ model Usuario {
   email       String       @unique
   password    String
   verified   Boolean      @default(false)
+  isAdmin    Boolean      @default(false)
+  dateCreated DateTime     @default(now())
   cronogramas Cronograma[]
   tokens      VerificationToken[]
   clientStripe ClientStripe[]
