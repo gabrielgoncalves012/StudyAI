@@ -1,7 +1,7 @@
 import stripeClient from "../config/stripe.js"
 import { prisma } from "../../../shared/config/db.js"
 
-export class PlanService {
+export default class PlanService {
     async createPlan(plan) {
         try {
 
@@ -14,21 +14,18 @@ export class PlanService {
                 currency: 'brl',
                 product: product.id,
                 unit_amount: plan.price * 100, // O Stripe trabalha com centavos
-                recurring: { interval: 'month' },
-                product_data: {
-                    name: plan.name,
-                    description: plan.description,
-                },
+                recurring: { interval: 'month' }
             })
 
             const resource = {
-                name: plan.name,
                 cronogramAccess: plan.cronogramAccess,
                 cronogramAmount: plan.cronogramAmount,
                 questionAmount: plan.questionAmount,
             }
 
-            await prisma.plan.create({
+            console.log('Criando plano no Stripe')
+
+            const newPlan = await prisma.plan.create({
                 data: {
                     name: plan.name,
                     price: plan.price,
@@ -38,11 +35,14 @@ export class PlanService {
                 }
             })
 
+            console.log('Plano criado:', newPlan)
+
             return {
                 message: 'Plano criado com sucesso',
             }
             
         } catch (error) {
+            console.log('Erro completo:', error)
             return {
                 message: 'Erro ao criar plano no Stripe',
                 error: error.message,
