@@ -2,7 +2,7 @@ import 'dotenv/config';
 import express from 'express'
 import cors from 'cors'
 import routerCronogram from './src/module/cronograma/router/router.js'
-//import routerPayment from './src/module/pagamento/router/router.js'
+import routerPayment from './src/module/pagamento/router/router.js'
 
 const app = express()
 
@@ -14,7 +14,7 @@ app.use(cors({
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use('/', routerCronogram.router)
-//app.use('/payment/', routerPayment.router)
+app.use('/api/pay', routerPayment.router)
 
 
 const PORT = process.env.PORT || 3333
