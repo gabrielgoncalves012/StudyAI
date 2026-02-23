@@ -11,6 +11,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }))
 
+app.use("/api/pay/webhook/stripe", express.raw({ type: "application/json" }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use('/', routerCronogram.router)
