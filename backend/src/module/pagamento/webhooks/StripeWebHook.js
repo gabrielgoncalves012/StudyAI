@@ -12,28 +12,65 @@ export async function handleWebhook(req, res) {
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
+
+    const existingEvent = await prisma.webhookEvent.findUnique({where: { stripeEventId: event.id}});
+
+    if (existingEvent) {
+      console.log(`Evento ${event.id} já processado, ignorando.`);
+      return res.status(200).json({ received: true });
+    }
+
+    await prisma.webhookEvent.create({
+      data: {
+        stripeEventId: event.id,
+        type: event.type,
+        processed: false,
+        errorMessage: "",
+        dateProcessed: new Date(),
+      }
+    });
+
   } catch (err) {
     return res.status(400).json({ message: `Assinatura inválida: ${err.message}` });
   }
 
-  switch (event.type) {
-    case "checkout.session.completed":
-      await handleCheckoutSessionCompleted(event.data.object);
-      break;
-    case "invoice.payment_succeeded":
-      await handleInvoicePaymentSucceeded(event.data.object);
-      break;
-    case "invoice.payment_failed":
-      await handleInvoicePaymentFailed(event.data.object);
-      break;
-    case "customer.subscription.deleted":
-      await handleSubscriptionCanceled(event.data.object);
-      break;
-    default:
-      console.log(`Evento não tratado: ${event.type}`);
-  }
+  try {
+    
+    switch (event.type) {
+      case "checkout.session.completed":
+        await handleCheckoutSessionCompleted(event.data.object);
+        break;
+      case "invoice.payment_succeeded":
+        await handleInvoicePaymentSucceeded(event.data.object);
+        break;
+      case "invoice.payment_failed":
+        await handleInvoicePaymentFailed(event.data.object);
+        break;
+      case "customer.subscription.deleted":
+        await handleSubscriptionCanceled(event.data.object);
+        break;
+      default:
+        console.log(`Evento não tratado: ${event.type}`);
+    }
+  
+    await prisma.webhookEvent.update({
+      where: { stripeEventId: event.id },
+      data: {
+        processed: true,
+        dateProcessed: new Date(),
+      },
+    });
 
-  return res.status(200).json({ received: true });
+    return res.status(200).json({ received: true });
+
+  } catch (error) {
+    await prisma.webhookEvent.update({
+      where: { stripeEventId: event.id },
+      data: { errorMessage: error.message },
+    });
+
+    return res.status(500).json({ message: "Erro interno", error: error.message });
+  }
   
 }
 
