@@ -1,10 +1,17 @@
 import stripeClient from '../config/stripe.js';
 import { prisma } from '../../../shared/config/db.js';
 
-export class ClientStripeService {
+export default class ClientStripeService {
 
-    async createClientStripe(customer) {
+    async createClientStripe(userId) {
         try {
+
+            const customer = await prisma.usuario.findFirst({
+                where: {
+                    id: userId,
+                    verified: true,
+                }
+            })
 
             const existingClient = await prisma.clientStripe.findFirst({
                 where: {
@@ -34,17 +41,18 @@ export class ClientStripeService {
                 email: customer.email,
             })
 
-            await prisma.clientStripe.create({
+            const clientStripe = await prisma.clientStripe.create({
                 data: {
                     name: customer.name,
                     email: customer.email,
                     stripeCustomerId: stripeCustomer.id,
-                    userId: customer.userId,
+                    userId: customer.id,
                     actived: true,
                 }
             })
 
         } catch (error) {
+            console.error('Erro ao criar cliente no Stripe:', error);
             return {
                 message: 'Erro ao criar cliente no Stripe',
                 error: error.message,
