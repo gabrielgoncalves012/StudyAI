@@ -93,6 +93,13 @@ export class UsuarioService {
       where: { userId: record.userId }
     });
 
+    await prisma.usage.create({
+      data: {
+        userId: record.userId,
+        periodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      },
+    });
+
     eventEmitter.emit('user.created', { userId: record.userId });
 
     return { message: 'Email verificado com sucesso' }
