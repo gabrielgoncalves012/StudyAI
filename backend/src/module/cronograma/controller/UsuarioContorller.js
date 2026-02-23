@@ -26,8 +26,8 @@ export class UsuarioController {
   async verifyEmail(req, res) {
     try {
       const { email, code } = req.body;
-      await this.usuarioService.verifyEmail(email, code);
-      return res.status(200).json({ message: 'Email verificado com sucesso' });
+      const response = await this.usuarioService.verifyEmail(email, code);
+      return res.status(200).json(response);
     } catch (error) {
       return res.status(400).json({ error: error.message });
     }
