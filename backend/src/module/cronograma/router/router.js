@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import verify from "../../../shared/middlewares/verifyJwt.js";
+import { checkUsage } from "../../../shared/middlewares/checkUsage.js";
 import upload from "../utils/multer.js";
 import { QuestoesController } from "../controller/QuestoesController.js";
 import { UsuarioController } from "../controller/UsuarioContorller.js";
@@ -16,16 +17,16 @@ router.post('/api/usuarios', usuarioController.createUser.bind(usuarioController
 router.post('/api/usuarios/signin', usuarioController.signIn.bind(usuarioController));
 router.post('/api/usuarios/verify', usuarioController.verifyEmail.bind(usuarioController));
 
-router.post('/api/generate-question', verify, questoesController.generateQuestion.bind(questoesController));
+router.post('/api/generate-question', verify, checkUsage("questoes"), questoesController.generateQuestion.bind(questoesController));
 router.get('/api/disciplines', questoesController.findAllDiscpipline.bind(questoesController));
 router.post('/api/questions', questoesController.findAllTopicsByDiscipline.bind(questoesController));
 
-router.post('/api/cronograma', verify, upload.single('file'), cronogramaController.generateCronograma.bind(cronogramaController));
-router.get('/api/cronogramas', verify, cronogramaController.findAllCronogramas.bind(cronogramaController));
-router.get('/api/cronograma/:id', verify, cronogramaController.findCronogramaById.bind(cronogramaController));
-router.get('/api/cronograma/topico/:topicoId', verify, cronogramaController.checkTopicCompletion.bind(cronogramaController));
-router.get('/api/cronograma/:id', verify, cronogramaController.editCronograma.bind(cronogramaController));
-router.delete('/api/cronograma/:id', verify, cronogramaController.deleteCronograma.bind(cronogramaController));
+router.post('/api/cronograma', verify, checkUsage("cronogramas"), upload.single('file'), cronogramaController.generateCronograma.bind(cronogramaController));
+router.get('/api/cronogramas', verify, checkUsage("cronogramas"), cronogramaController.findAllCronogramas.bind(cronogramaController));
+router.get('/api/cronograma/:id', verify, checkUsage("cronogramas"), cronogramaController.findCronogramaById.bind(cronogramaController));
+router.get('/api/cronograma/topico/:topicoId', verify, checkUsage("cronogramas"), cronogramaController.checkTopicCompletion.bind(cronogramaController));
+router.get('/api/cronograma/:id', verify, checkUsage("cronogramas"), cronogramaController.editCronograma.bind(cronogramaController));
+router.delete('/api/cronograma/:id', verify, checkUsage("cronogramas"), cronogramaController.deleteCronograma.bind(cronogramaController));
 
 export default  {
     router
