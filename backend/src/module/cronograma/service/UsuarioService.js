@@ -4,6 +4,7 @@ import { hash, compare } from 'bcrypt';
 import { prisma } from '../../../shared/config/db.js';
 import jwt from 'jsonwebtoken';
 import { EmailService } from './EmailService.js';
+import eventEmitter from '../../../shared/EventEmiter.js';
 
 
 export class UsuarioService {
@@ -92,6 +93,8 @@ export class UsuarioService {
       where: { userId: record.userId }
     });
 
-    return { ok: true };
+    eventEmitter.emit('user.created', { userId: record.userId });
+
+    return { message: 'Email verificado com sucesso' }
   }
 }
