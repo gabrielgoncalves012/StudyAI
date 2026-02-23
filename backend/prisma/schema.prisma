@@ -25,6 +25,20 @@ model Usuario {
   cronogramas Cronograma[]
   tokens      VerificationToken[]
   clientStripe ClientStripe[]
+  usage       Usage[]
+}
+
+model Usage {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  questoes    Int      @default(0)
+  cronogramas Int      @default(0)
+  isAccessCronograma Boolean  @default(false)
+  periodEnd   DateTime
+  dateCreated DateTime @default(now())
+  dateUpdated DateTime @updatedAt
+
+  usuario Usuario @relation(fields: [userId], references: [id])
 }
 
 model VerificationToken {
