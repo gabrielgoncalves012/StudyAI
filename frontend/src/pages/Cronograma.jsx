@@ -119,7 +119,7 @@ export default function Cronograma() {
                                 <div className="icon">
                                     <PiChartLineUp color="#f4c025"/>
                                 </div>
-                                <span className="value">10%</span>
+                                <span className="value">2.1%</span>
                                 <span className="label">Progresso</span>
                             </div>
                         </section>
