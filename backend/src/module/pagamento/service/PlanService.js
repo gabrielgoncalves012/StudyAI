@@ -146,4 +146,38 @@ export default class PlanService {
             
         }
     }
+
+    async returnPlanActual(userId) {
+        try {
+
+            const subscription = await prisma.subscriptions.findFirst({
+                where: {
+                    client: {
+                        userId: userId,
+                    }
+                }
+            })
+
+            const plan  = await prisma.plan.findUnique({
+                where: {
+                    id: subscription.planId,
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    actived: true,
+                    dateCreated: true,
+                    dateUpdated: true
+                }
+            })
+
+            return plan
+
+        } catch (error) {
+            return {
+                message: 'Erro ao buscar plano atual',
+                error: error.message,
+            }
+        }
+    }
 }

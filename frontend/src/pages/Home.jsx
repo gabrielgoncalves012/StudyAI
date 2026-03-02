@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import "../styles/home.css";
 import heroDashboard from "../../public/hero.png";
 import { PaymentService } from "../services/Payment/PaymentService";
 import { MdOutlineClear } from "react-icons/md";
+import { useNavigate } from 'react-router-dom'
 
 /* ─── ícones inline (svg) ──────────────────────────── */
 const CheckIcon = () => (
@@ -100,8 +101,8 @@ const BENEFITS = [
   { icon: <IconTarget />,  title: "Priorização Inteligente",         desc: "Mais tempo para matérias com maior peso no edital do seu concurso." },
   { icon: <IconRefresh />, title: "Revisões Espaçadas",              desc: "Baseado na curva do esquecimento de Ebbinghaus para retenção máxima." },
   { icon: <IconChart />,   title: "Analytics de Desempenho",         desc: "Veja seu progresso em cada matéria com relatórios detalhados." },
-  { icon: <IconFile />,    title: "Banco de Questões Integrado",      desc: "500k+ questões atualizadas de concursos anteriores." },
-  { icon: <IconClock />,   title: "Adaptação à Rotina",              desc: "O cronograma se ajusta automaticamente se você atrasar." },
+  { icon: <IconFile />,    title: "Questões de concurso",      desc: "500k+ questões atualizadas geradas por IA." },
+  { icon: <IconClock />,   title: "Cronograma semanal",              desc: "Saiba quais dias estudar quais materias" },
 ];
 
 const POPULAR = [
@@ -126,21 +127,36 @@ function FaqItem({ q, a }) {
   );
 }
 
+const paymentService = new PaymentService()
+
 /* ─── PÁGINA PRINCIPAL ────────────────────────────── */
 export default function Home() {
   const [heroInput,   setHeroInput]   = useState("");
   const [editalInput, setEditalInput] = useState("");
+  const [plan, setPlan] = useState()
+
+  const navigate = useNavigate();
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['plans'],
     queryFn: async () => {
-      const paymentService = new PaymentService()
+      const myPlan = await paymentService.returnPlanActual()
+      setPlan(myPlan)
       return await paymentService.findAllPlans()
     }
   })
 
+  const navigatePage = (data) => {
+
+    localStorage.setItem('destino', JSON.stringify(data))
+    console.log("data")
+  
+    navigate(`/login`)
+  
+  }
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen home">
 
       {/* ══════════════════════════════════════════
           HERO
@@ -183,15 +199,15 @@ export default function Home() {
                     value={heroInput}
                     onChange={e => setHeroInput(e.target.value)}
                   />
-                  <button className="btn-cta gradient-cta">
+                  <button className="btn-cta gradient-cta" onClick={() => navigatePage('/dashboard')}>
                     GERAR MEU CRONOGRAMA
                   </button>
                 </div>
 
                 {/* trust */}
                 <div className="hero-trust">
-                  <span>✓ Sem cartão de crédito</span>
-                  <span>✓ 30 dias grátis</span>
+                  <span>✓ Suporte</span>
+                  <span>✓ Planos gratuito</span>
                   <span>✓ Cancela quando quiser</span>
                 </div>
               </div>
@@ -233,7 +249,7 @@ export default function Home() {
                 value={editalInput}
                 onChange={e => setEditalInput(e.target.value)}
               />
-              <button className="btn-cta-full gradient-cta">Analisar Edital →</button>
+              <button className="btn-cta-full gradient-cta" onClick={() => navigatePage('/dashboard')}>Analisar Edital →</button>
             </div>
 
             {/* card 2 */}
@@ -353,6 +369,7 @@ export default function Home() {
             {data && data.map((p, i) => {
 
               const features = JSON.parse(p.resources)
+              const isMyPlan = p.id == plan.id
 
 
               return (
@@ -365,50 +382,11 @@ export default function Home() {
                     <li>{features.cronogramAmount > 0 ? <CheckIcon /> : <MdOutlineClear color="red"/>}{ features.cronogramAmount == 0 ? "Não gera cronogramas" : features.cronogramAmount == 1 ? `${features.cronogramAmount} cronograma/mês` : `${features.cronogramAmount} cronogramas/mês` } </li>
                     <li><CheckIcon/> {features.questionAmount} Questionarios por mês </li>
                   </ul>
-                  <button className="btn-outline">Adiquirir</button>
+                  {isMyPlan ? <button disabled className="btn-outline" onClick={() => navigatePage('/usuario/planos')}>Seu plano atual</button> : <button className="btn-outline" onClick={() => navigatePage('/usuario/planos')}>Adiquirir</button> }
                 </div>
               )
 
             })}
-            {/* mensal */}
-            {/* <div className="pricing-card">
-              <h3>Mensal</h3>
-              <div><span className="pricing-price">R$ 29,90</span><span className="pricing-period">/mês</span></div>
-              <ul className="pricing-features">
-                {["Cronogramas ilimitados","Upload de editais (PDF)","Banco de questões básico","Suporte email"].map(f => (
-                  <li key={f}><CheckIcon />{f}</li>
-                ))}
-              </ul>
-              <button className="btn-outline">Começar 7 dias grátis</button>
-            </div> */}
-
-            {/* trimestral — featured */}
-            {/* <div className="pricing-card featured">
-              <div className="pricing-badge gradient-cta">Mais escolhido</div>
-              <h3>Trimestral</h3>
-              <div><span className="pricing-price">R$ 69,90</span><span className="pricing-period">/trimestre</span></div>
-              <span className="pricing-monthly">R$ 23,30/mês</span>
-              <ul className="pricing-features">
-                {["Todos benefícios do mensal","Prioridade no suporte","Relatórios avançados","Análise de desempenho detalhada"].map(f => (
-                  <li key={f}><CheckIcon />{f}</li>
-                ))}
-              </ul>
-              <button className="btn-cta-block gradient-cta">Começar 7 dias grátis</button>
-            </div> */}
-
-            {/* anual */}
-            {/* <div className="pricing-card">
-              <div className="pricing-badge accent">Economia de 45%</div>
-              <h3>Anual</h3>
-              <div><span className="pricing-price">R$ 199,90</span><span className="pricing-period">/ano</span></div>
-              <span className="pricing-monthly">R$ 16,66/mês</span>
-              <ul className="pricing-features">
-                {["Todos benefícios","Consultoria mensal em grupo","Webinars exclusivos","Desafios de questões"].map(f => (
-                  <li key={f}><CheckIcon />{f}</li>
-                ))}
-              </ul>
-              <button className="btn-outline">Começar 7 dias grátis</button>
-            </div> */}
           </div>
         </div>
       </section>

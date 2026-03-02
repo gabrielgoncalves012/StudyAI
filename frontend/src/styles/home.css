@@ -1,10 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 /* ─── RESET ─────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-img, svg { display: block; max-width: 100%; height: auto; }
-button { cursor: pointer; font-family: inherit; }
-a { color: inherit; text-decoration: none; }
+
 
 /* ─── TOKENS (HSL → valores reais) ──────────────
    --primary           hsl(213 64% 10%)  = #091829
@@ -769,50 +766,50 @@ body {
 }
 
 /* ─── FOOTER ─────────────────────────────────── */
-.footer {
+.home .footer {
   background: var(--c-primary);
   padding: 4rem 0;
 }
 
-.footer-grid {
+.home .footer-grid {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
   gap: 2.5rem;
   margin-bottom: 3rem;
 }
 
-.footer-brand { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.footer-logo {
+.home .footer-brand { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+.home .footer-logo {
   width: 2rem; height: 2rem; border-radius: 0.5rem;
   display: flex; align-items: center; justify-content: center;
   font-weight: 700; font-size: 0.875rem; color: var(--c-secondary-fg);
 }
-.footer-brand span { font-size: 1.25rem; font-weight: 700; color: var(--c-primary-fg); }
+.home .footer-brand span { font-size: 1.25rem; font-weight: 700; color: var(--c-primary-fg); }
 
-.footer-desc { color: rgba(255,255,255,0.60); font-size: 0.875rem; max-width: 22rem; line-height: 1.625; }
+.home .footer-desc { color: rgba(255,255,255,0.60); font-size: 0.875rem; max-width: 22rem; line-height: 1.625; }
 
-.footer-social {
+.home .footer-social {
   display: flex;
   gap: 1rem;
   margin-top: 1.5rem;
 }
-.footer-social a {
+.home .footer-social a {
   color: rgba(255,255,255,0.40);
   font-size: 0.875rem;
   transition: color 0.2s;
 }
-.footer-social a:hover { color: var(--c-secondary); }
+.home .footer-social a:hover { color: var(--c-secondary); }
 
-.footer-col h4 { font-weight: 600; color: var(--c-primary-fg); margin-bottom: 1rem; }
-.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
-.footer-col a {
+.home .footer-col h4 { font-weight: 600; color: var(--c-primary-fg); margin-bottom: 1rem; }
+.home .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+.home .footer-col a {
   color: rgba(255,255,255,0.50);
   font-size: 0.875rem;
   transition: color 0.2s;
 }
-.footer-col a:hover { color: var(--c-primary-fg); }
+.home .footer-col a:hover { color: var(--c-primary-fg); }
 
-.footer-bottom {
+.home .footer-bottom {
   border-top: 1px solid rgba(255,255,255,0.10);
   padding-top: 2rem;
   text-align: center;

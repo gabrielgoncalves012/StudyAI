@@ -44,10 +44,19 @@ export class CronogramaService {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            return response.data;
+            return {
+                status: response.status,
+                data: response.data
+            };
         } catch (error) {
-            console.error('Error creating cronograma:', error);
-            throw error;
+            if(error.response?.status === 403) {
+                if(error.response.data.permission == false) {
+                    return {
+                        status: error.response.status,
+                        data: error.response.data
+                    };
+                }
+            }
         }
     }
 

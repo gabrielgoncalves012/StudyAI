@@ -33,15 +33,27 @@ export function checkUsage(resource) {
             };
 
             const resources = subscription.plan.resources;
+            const resourecsObject = JSON.parse(resources);
+
+            console.log("resources", resources);
 
             // verifica se o recurso está liberado no plano
-            if (resource === "cronogramas" && !resources.cronogramAccess) {
-                return res.status(403).json({ message: "Seu plano não tem acesso a cronogramas" });
+            if (resource === "acessCronograma") {
+                if (resourecsObject.cronogramAccess) {
+                    return next();
+                }
+
+                return res.status(403).json({ 
+                    message: "Ops...",
+                    description: "Não é possivel criar cronogramas com o plano gratuito",
+                    limit: 0,
+                    used: 0,
+                    permission: false
+                 });
             }
 
             // pega o limite correto baseado no resource
 
-            const resourecsObject = JSON.parse(resources);
             const limitMap = {
                 cronogramas: resourecsObject.cronogramAmount,
                 questoes: resourecsObject.questionAmount,

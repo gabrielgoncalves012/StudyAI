@@ -3,6 +3,9 @@ import SubscriptionService from "../service/SubscriptionService.js";
 export default class SubscriptionController {
     async generateLink(req, res) {
         try {
+
+            const userId = req.user_id;
+            req.body.userId = userId;
             
             const subscriptionService = new SubscriptionService();
             const response = await subscriptionService.generateLink(req.body);
@@ -65,6 +68,23 @@ export default class SubscriptionController {
         } catch (error) {
             return res.status(500).json({
                 message: 'Erro ao cancelar assinatura',
+                error: error.message,
+            })
+        }
+    }
+
+    async findFatures(req, res) {
+        try {
+            
+            const userId = req.user_id;
+            const subscriptionService = new SubscriptionService();
+            const response = await subscriptionService.findFatures(userId);
+
+            return res.status(200).json(response);
+
+        } catch (error) {
+            return res.status(500).json({
+                message: 'Erro ao buscar faturas',
                 error: error.message,
             })
         }

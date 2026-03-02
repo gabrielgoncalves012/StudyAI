@@ -155,4 +155,42 @@ export default class SubscriptionService {
         };
       }
     }
+
+    async findFatures(userId) {
+      try {
+        let invoice = await prisma.invoice.findMany({
+          where: {
+            subscription: {
+              client: {
+                userId: userId,
+              }
+            }
+          }
+        })
+
+        const newInvoice = await Promise.all(invoice.map(async(item) => {
+          const plan = await prisma.plan.findFirst({
+            where: {
+              price: item.price
+            }
+          })
+
+          return {
+            id: item.id,
+            name: plan.name,
+            price: plan.price,
+            status: item.status == "paid" ? "pago" : "pendente",
+            date: item.dateCreated
+          }
+        }))
+
+        return newInvoice
+        
+      } catch (error) {
+        return {
+          message: 'Erro ao buscar faturas',
+          error: error.message,
+        };
+      }
+    }
 }

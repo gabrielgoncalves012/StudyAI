@@ -167,13 +167,13 @@ export class CronogramaService {
     }
   }
 
-  async createCronograma(body, file, userId) {
+  async createCronograma(body, file, userId, url) {
     try {
 
       const date = new Date();
       const accessDate = date.toISOString();
 
-      const jsonEdital = await this.#generateJsonFromEdital(body, file);
+      const jsonEdital = await this.#generateJsonFromEdital(body, file, url);
 
       const dataCronograma = {
         horasDiarias: body.horasDiarias,
@@ -288,7 +288,7 @@ export class CronogramaService {
 
   }
   
-  async #generateJsonFromEdital(data, file) {
+  async #generateJsonFromEdital(data, file, url) {
         const prompt = `
         Você é um assistente especializado em análise de editais de concursos públicos. Sua tarefa é extrair informações específicas sobre o conteúdo programático de um cargo ou área mencionado pelo usuário.
 
@@ -349,7 +349,7 @@ export class CronogramaService {
         Analise o edital e retorne o conteúdo programático para o cargo de ${data.cargo_area}.
         `;
 
-        const textEdital = await extractTextFromPDF(file.buffer);
+        const textEdital = await extractTextFromPDF(file.buffer, url);
 
         const response = await openai.chat.completions.create({
             model: "deepseek-chat",

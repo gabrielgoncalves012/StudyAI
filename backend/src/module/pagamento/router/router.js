@@ -21,11 +21,13 @@ router.get('/plan', (req, res) => {
 
 router.post('/plan', verifyAdmin, planController.createPlan.bind(planController))
 router.get('/plans', planController.findAllPlans.bind(planController))
+router.get('/plan/actual', verifyJwt, planController.returnPlanActual.bind(planController))
 
 router.post('/subscription/checkout', verifyJwt, subscriptionController.generateLink.bind(subscriptionController))
 router.get('/subscription/status', verifyJwt, subscriptionController.getSubscriptionStatus.bind(subscriptionController))
 router.post('/subscription/plan', verifyJwt, subscriptionController.changePlan.bind(subscriptionController))
 router.post('/subscription/cancel', verifyJwt, subscriptionController.cancelSubscription.bind(subscriptionController))
+router.get('/subscription/fatures', verifyJwt, subscriptionController.findFatures.bind(subscriptionController))
 
 router.post('/webhook/stripe', handleWebhook)
 

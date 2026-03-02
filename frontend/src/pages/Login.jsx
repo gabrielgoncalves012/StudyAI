@@ -21,7 +21,7 @@ function Login() {
 
         <div className="toggle-buttons">
           <button className="toggle-button active">Entrar</button>
-          <button className="toggle-button">Criar conta</button>
+          <button className="toggle-button" onClick={() => navigate("/register")}>Criar conta</button>
         </div>
 
         <form onSubmit={handleSubmit}>

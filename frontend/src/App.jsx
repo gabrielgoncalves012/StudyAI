@@ -20,7 +20,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/selecionar-concurso" element={<SelectConcurso />} />
         <Route  path='/cronograma/:id' element={<Cronograma/>}/>
-        <Route path='/plans' element={<Plans/>}/>
+        <Route path='/usuario/planos' element={<Plans/>}/>
         <Route
           path="/dashboard"
           element={

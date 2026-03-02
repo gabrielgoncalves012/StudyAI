@@ -22,11 +22,11 @@ router.get('/api/disciplines', questoesController.findAllDiscpipline.bind(questo
 router.post('/api/questions', questoesController.findAllTopicsByDiscipline.bind(questoesController));
 
 router.post('/api/cronograma', verify, checkUsage("cronogramas"), upload.single('file'), cronogramaController.generateCronograma.bind(cronogramaController));
-router.get('/api/cronogramas', verify, checkUsage("cronogramas"), cronogramaController.findAllCronogramas.bind(cronogramaController));
-router.get('/api/cronograma/:id', verify, checkUsage("cronogramas"), cronogramaController.findCronogramaById.bind(cronogramaController));
-router.get('/api/cronograma/topico/:topicoId', verify, checkUsage("cronogramas"), cronogramaController.checkTopicCompletion.bind(cronogramaController));
-router.get('/api/cronograma/:id', verify, checkUsage("cronogramas"), cronogramaController.editCronograma.bind(cronogramaController));
-router.delete('/api/cronograma/:id', verify, checkUsage("cronogramas"), cronogramaController.deleteCronograma.bind(cronogramaController));
+router.get('/api/cronogramas', verify, checkUsage("acessCronograma"), cronogramaController.findAllCronogramas.bind(cronogramaController));
+router.get('/api/cronograma/:id', verify, checkUsage("acessCronograma"), cronogramaController.findCronogramaById.bind(cronogramaController));
+router.get('/api/cronograma/topico/:topicoId', verify, checkUsage("acessCronograma"), cronogramaController.checkTopicCompletion.bind(cronogramaController));
+router.get('/api/cronograma/:id', verify, checkUsage("acessCronograma"), cronogramaController.editCronograma.bind(cronogramaController));
+router.delete('/api/cronograma/:id', verify, checkUsage("acessCronograma"), cronogramaController.deleteCronograma.bind(cronogramaController));
 
 export default  {
     router

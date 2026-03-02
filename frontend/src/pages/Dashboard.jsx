@@ -6,27 +6,31 @@ import Card from '../components/Card';
 import EmojiPicker, { Emoji } from 'emoji-picker-react';
 import { IoMdAdd } from "react-icons/io";
 import { FaBars, FaTimes } from 'react-icons/fa'; // Font Awesome
+import { CiUser } from "react-icons/ci";
 import Modal from '../components/Modal';
 import { CronogramaService } from '../services/CronogramaService/CronogramService';
 import { useQuery } from '@tanstack/react-query';
+import UserMenuComponent from '../components/UserMenuComponent';
 
 const cronogramaService = new CronogramaService();
+const COLORS = ["43aa8b", "b1a7a6", "f2cd00", "161a1d", "1961ae", "61007d"];
 
 function Dashboard() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [modalDeleteOpen, setModalDeleteOpen] = useState(false)
   const [cronogramDeleteId, setCronogramDeleteId] = useState()
-  const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
   const [cronogramSending, setCronogramSending] = useState(false)
-  const colors = ["43aa8b", "b1a7a6", "f2cd00", "161a1d", "1961ae", "61007d"]
   const [file, setFile] = useState(null)
+  const [url, setUrl] = useState("")
   const [title, setTitle] = useState("")
   const [cargoArea, setCargoArea] = useState("")
   const [horasDiarias, setHorasDiarias] = useState(0)
-  const [colorSelected, setColorSelected] = useState(colors[0])
-  const [emojCode, setEmojiCode] = useState("1f3e6")
+  const [colorSelected, setColorSelected] = useState(COLORS[0])
+  const [emojCode, setEmojiCode] = useState()
   const [messageFormIncomplete, setMessageFormIncomplete] = useState(false)
+  const [responseCronograma, setResponseCronograma] = useState()
 
   const navigate = useNavigate()
 
@@ -38,9 +42,13 @@ function Dashboard() {
       }
   })
 
-  const handleCraateCronograma = async () => {
+  const handleCraateCronograma = async (e) => {
 
-    if(file === null || title === "" || cargoArea === "" || horasDiarias === 0 || colorSelected === "" || emojCode === "") {
+    console.log()
+
+    e.preventDefault();
+
+    if((file === null && url === "") || title === "" || cargoArea === "" || horasDiarias === 0 || colorSelected === "" || emojCode === "") {
       setMessageFormIncomplete(true)
       return
     }
@@ -48,13 +56,21 @@ function Dashboard() {
     setCronogramSending(true)
     const formData = new FormData();
     formData.append('file', file);
+    if (url !== "") {
+      formData.append('url', url); 
+    }
     formData.append('concurso', title);
     formData.append('cargo_area', cargoArea);
     formData.append('horasDiarias', horasDiarias);
     formData.append('colorCode', colorSelected);
     formData.append('emojCode', emojCode);
     
-    await cronogramaService.createCronograma(formData)
+    const cronogramaRes = await cronogramaService.createCronograma(formData)
+      if (cronogramaRes.status === 403) {
+        setResponseCronograma(cronogramaRes)
+        return
+      }
+  
     setModalOpen(false)
     setCronogramSending(false)
     refetch()
@@ -86,70 +102,167 @@ function Dashboard() {
           </div>
         </div>
       </Modal>
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
-        {cronogramSending ? (
-          <div className='cronogram-sending'>
-            <h2>Gerando Cronograma...</h2>
-            <p>Isso pode levar até 5 minutos, dependendo do tamanho do edital. Aguarde...</p>
-          </div>
-        ): (        
-          <div className='form-cronograma'>
-            <h2>Criar Novo Cronograma</h2>
-
-            <div className='form-group'>
-              <label>Edital</label>
-              <input type="file" onChange={(e) => setFile(e.target.files[0])}/>
-            </div>
-
-            <div className='form-group'>
-              <label>Nome do Cronograma</label>
-              <input placeholder="Ex: Cronograma para Polícia Federal" onChange={(e) => setTitle(e.target.value)}/>
-            </div>
-
-            <div className='form-group'>
-              <label>Nome exato do cargo</label>
-              <input placeholder="Ex: Agente" onChange={(e) => setCargoArea(e.target.value)}/>
-            </div>
-
-            <div className='form-group'>
-              <label>Quantidade de horas por dia de estudo</label>
-              <input placeholder="Ex: Cronograma para Polícia Federal" type='number' onChange={(e) => setHorasDiarias(e.target.value)}/>
-            </div>
-
-            <div className='color-picker'>
-                <label>Cor do Cronograma</label>
-                <div className='color-options'>
-                  {colors.map(color => (
-                  <div key={color} className='color-option' style={{backgroundColor: `#${color}`, color: `#${color}`, border: color === colorSelected ? '4px solid black' : 'none'}} onClick={() => setColorSelected(color)}> .</div>
-                ))}
-                </div>
-            </div>
-
-            <div>
-              <label>Emoji</label>
-
-              <button onClick={() => setEmojiPickerOpen(!emojiPickerOpen)}>
-                {emojiPickerOpen ? <EmojiPicker onEmojiClick={(emoji) => {
-                  setEmojiCode(emoji.unified)
-                  setEmojiPickerOpen(false)
-                }} /> : <Emoji unified={emojCode} size={24} />}
-              </button>
-              
-            </div>
-
-            <button className="btn-primary" onClick={handleCraateCronograma}>
-              Criar Cronograma
+      {(cronogramSending) ? (<>{modalOpen && (
+        <>
+        <div className="modal-overlay" onClick={() => {setModalOpen(false); setCronogramSending(false)}}>
+          <div className="modal-box">
+            <button className="modal-close" onClick={() => {setModalOpen(false); setCronogramSending(false)}}>
+              ✕
             </button>
-
-            {messageFormIncomplete && (
-              <p className="error-message" style={{ color: 'red' }}>
-                Por favor, preencha todos os campos.
-              </p>
+            {responseCronograma ? (
+              <>
+                <h2>{responseCronograma.data.message}</h2>
+                <div style={{width: "100%", height: "1px", backgroundColor: "gray"}}></div>
+                <p>{responseCronograma.data.description}</p>
+                <div style={{display: "flex", justifyContent: "center", marginTop: "20px"}}>
+                  <button onClick={() => navigate('/usuario/planos')} >Alterar plano</button>
+                </div>
+              </>
+            ): (
+              <>
+                <h2>Gerando Cronograma...</h2>
+                <div style={{width: "100%", height: "1px", backgroundColor: "gray"}}></div>
+                <p>Isso pode levar até 5 minutos, dependendo do tamanho do edital. Aguarde...</p>
+              </>
             )}
           </div>
-        )}
-      </Modal>
+        </div>
 
+        </>
+      )}</>) : (
+        <>
+
+        {modalOpen && (
+          <div className="modal-overlay" onClick={() => setModalOpen(false)}>
+            <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+              <button className="modal-close" onClick={() => setModalOpen(false)}>
+                ✕
+              </button>
+              <h2>Criar novo cronograma</h2>
+
+              <form className="modal-form" onSubmit={handleCraateCronograma}>
+                {/* File upload */}
+                <div className="form-group">
+                  <label>Arquivo do edital</label>
+                  <div className={`file-upload-area${file ? " has-file" : ""}`}>
+                    <input
+                      type="file"
+                      onChange={(e) => setFile(e.target.files[0] || null)}
+                    />
+                    <div className="file-upload-icon">📄</div>
+                    <div className="file-upload-text">
+                      {file ? "" : <>Clique ou arraste para <strong>enviar arquivo</strong></>}
+                    </div>
+                    {file && <div className="file-name">{file.name}</div>}
+                  </div>
+                </div>
+
+                {/* URL */}
+                <div className="form-group">
+                  <label>URL do edital</label>
+                  <input
+                    type="url"
+                    placeholder="https://exemplo.com/edital.pdf"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                  />
+                </div>
+
+                {/* Nome */}
+                <div className="form-group">
+                  <label>Nome do cronograma</label>
+                  <input
+                    type="text"
+                    placeholder="Ex: Concurso INSS 2025"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                </div>
+
+                {/* Cargo */}
+                <div className="form-group">
+                  <label>Nome exato do cargo</label>
+                  <input
+                    type="text"
+                    placeholder="Ex: Técnico do Seguro Social"
+                    value={cargoArea}
+                    onChange={(e) => setCargoArea(e.target.value)}
+                  />
+                </div>
+
+                {/* Horas */}
+                <div className="form-group">
+                  <label>Horas disponíveis para estudar</label>
+                  <input
+                    type="number"
+                    placeholder="Ex: 4"
+                    min="1"
+                    value={horasDiarias}
+                    onChange={(e) => setHorasDiarias(e.target.value)}
+                  />
+                </div>
+
+                {/* Cores */}
+                <div className="form-group">
+                  <label>Cor do cronograma</label>
+                  <div className="color-options">
+                    {COLORS.map((c) => (
+                      <div
+                        key={c}
+                        className={`color-circle${colorSelected === c ? " selected" : ""}`}
+                        style={{ backgroundColor: `#${c}` }}
+                        onClick={() => setColorSelected(c)}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Emoji */}
+                <div className="form-group emoji-section">
+                  <label>Emoji</label>
+                  <button
+                    type="button"
+                    className="emoji-toggle-btn"
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                  >
+                    {emojCode ? (
+                      <span className="emoji-selected">{emojCode}</span>
+                    ) : (
+                      "😀 Escolher emoji"
+                    )}
+                  </button>
+                  {showEmojiPicker && (
+                    <div className="emoji-picker-wrapper">
+                      <EmojiPicker
+                        onEmojiClick={(emojiData) => {
+                          setEmojiCode(emojiData.emoji);
+                          setShowEmojiPicker(false);
+                        }}
+                        width="100%"
+                        height={350}
+                        searchPlaceholder="Buscar emoji..."
+                        previewConfig={{ showPreview: false }}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <button type="submit" className="submit-btn">
+                  Gerar
+                </button>
+
+                {messageFormIncomplete && (
+                <p className="error-message" style={{ color: 'red' }}>
+                  Por favor, preencha todos os campos.
+                </p>
+                )}
+              </form>
+            </div>
+          </div>
+        )}
+        
+        </>
+      )}
       {/* Sidebar */}
       <aside className={`sidebar ${menuOpen ? 'open' : ''}`}>
         <h2 className="sidebar-logo">StudyAI</h2>
@@ -179,6 +292,7 @@ function Dashboard() {
           >
             <FaBars size={24} />
           </button>
+          <UserMenuComponent/>
 
           
         </header>
@@ -203,7 +317,7 @@ function Dashboard() {
               </li>
 
               {isLoading && <p>Carregando cronogramas...</p>}
-              {error && <p>Erro ao carregar cronogramas: {error.message}</p>}
+              {error && <p></p>}
               {data && data.map(cronograma => (
                 <li key={cronograma.id} className='recent-item'>
                   <Card code={cronograma.emojCode} title={cronograma.concurso} color={`#${cronograma.colorCode}`} date={cronograma.accessDate} onClick={() => navigate(`/cronograma/${cronograma.id}`)} onDelete={()=> handleDeleteCronograma(cronograma.id)}/>

@@ -59,7 +59,14 @@ export class CronogramaController {
     }
 
     const cronogramaService = new CronogramaService();
-    const response = await cronogramaService.createCronograma(req.body, req.file, user_id);
-    res.status(200).json(response);//.json(response);
+
+    if (req.body.url) {
+      const response = await cronogramaService.createCronograma(req.body, req.file, user_id, req.body.url);
+      res.status(200).json(response);
+    }
+
+    const response = await cronogramaService.createCronograma(req.body, req.file, user_id, null);
+    
+    res.status(200).json(response);
   }
 }
