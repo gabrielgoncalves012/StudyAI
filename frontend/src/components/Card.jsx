@@ -41,7 +41,7 @@ export default function Card({id, title, date, code, icon, color, onClick, onDel
         {icon && <div className="card-icon">{icon}</div>}
         {code && (
           <div className='card-header'>
-            <div className='card-emoji'><Emoji unified={code} size={24} /></div>
+            <span className="card-emoji">{code}</span>
             
             <div className='card-options'>
               

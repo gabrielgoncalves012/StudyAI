@@ -2,11 +2,11 @@ import { api, useJwtToken } from "../Api";
 
 export class PaymentService {
 
-    async findFatures() {
+    async findPlanAndFatures() {
         try {
             
             useJwtToken()
-            const response = await api.get('pay/subscription/fatures')
+            const response = await api.get('pay/subscription/plan-and-invoices')
             return response.data
 
         } catch (error) {

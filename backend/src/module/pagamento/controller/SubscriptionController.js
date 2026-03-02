@@ -73,12 +73,12 @@ export default class SubscriptionController {
         }
     }
 
-    async findFatures(req, res) {
+    async findPlansAndInvoices(req, res) {
         try {
             
             const userId = req.user_id;
             const subscriptionService = new SubscriptionService();
-            const response = await subscriptionService.findFatures(userId);
+            const response = await subscriptionService.findPlansAndInvoices(userId);
 
             return res.status(200).json(response);
 

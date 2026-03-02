@@ -27,7 +27,7 @@ router.post('/subscription/checkout', verifyJwt, subscriptionController.generate
 router.get('/subscription/status', verifyJwt, subscriptionController.getSubscriptionStatus.bind(subscriptionController))
 router.post('/subscription/plan', verifyJwt, subscriptionController.changePlan.bind(subscriptionController))
 router.post('/subscription/cancel', verifyJwt, subscriptionController.cancelSubscription.bind(subscriptionController))
-router.get('/subscription/fatures', verifyJwt, subscriptionController.findFatures.bind(subscriptionController))
+router.get('/subscription/plan-and-invoices', verifyJwt, subscriptionController.findPlansAndInvoices.bind(subscriptionController))
 
 router.post('/webhook/stripe', handleWebhook)
 

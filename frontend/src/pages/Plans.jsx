@@ -27,14 +27,14 @@ const Plans = () => {
 
   const [plan, setPlan] = useState()
   const [fatures, setFatures] = useState()
+  const [messagePlan, setMessagePlan] = useState()
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['plans'],
       queryFn: async () => {
-        const myPlan = await paymentService.returnPlanActual()
-        const fatures = await paymentService.findFatures()
-        setFatures(fatures)
-        setPlan(myPlan)
+        const faturePlan = await paymentService.findPlanAndFatures()
+        setFatures(faturePlan.invoices)
+        setPlan(faturePlan.plan)
         return await paymentService.findAllPlans()
       }
   })
@@ -50,14 +50,26 @@ const Plans = () => {
     }
 
     const checkout = await paymentService.checkout(data)
+    if (checkout.status == "link") {
+      navigatePage(checkout.link)
+    } else if(checkout.status == "updated") {
+      setMessagePlan(checkout.message)
+      refetch()
+    }
 
-    navigatePage(checkout.link)
   }
 
   return (
     <div className="plans-page">
       <h1>Escolha seu plano</h1>
       <p className="subtitle">Planos flexíveis que crescem com você</p>
+
+      {/* Mensagem informando que o plano foi alterado */}
+      {messagePlan && (
+        <div className="message-plan" style={{display: "flex", justifyContent: "center", alignItems: "center", width: "100%", padding: "20px"}}>
+          <p style={{marginBottom: "20px", color: "green", fontWeight: "bold", fontSize: "20px", textAlign: "center", backgroundColor: "rgba(0, 128, 0, 0.2)", borderRadius: "10px", padding: "10px"}}>{messagePlan}</p>
+        </div>
+      )}
 
       <div className="pricing-grid" style={{paddingBottom: "80px"}}>
         {data && data.map((p, i) => {

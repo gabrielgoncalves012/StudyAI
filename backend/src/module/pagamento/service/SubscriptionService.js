@@ -4,6 +4,26 @@ import stripeClient from "../config/stripe.js"
 export default class SubscriptionService {
 
     async generateLink(data) {
+
+      const subscription = await prisma.subscriptions.findFirst({
+        where: {
+          client: {
+            userId: data.userId,
+          }
+        },
+        select: {
+          stripeSubscriptionId: true,
+          status: true,
+          id: true,
+        }
+      })
+
+      if (subscription && subscription.status === "active") {
+        this.changePlan(data.userId, data.planId)
+      }
+      
+        if (subscription) throw new Error(`Assinatura para userId: ${data.userId} ja cadastrada`);
+
         try {
           const plan = await prisma.plan.findFirst({
             where: { id: data.planId },
@@ -34,6 +54,7 @@ export default class SubscriptionService {
           });
       
           return {
+            status: 'link',
             message: 'Link para pagamento criado com sucesso',
             link: session.url,
           };
@@ -119,6 +140,7 @@ export default class SubscriptionService {
       })
 
       return {
+        status: "updated",
         message: 'Plano alterado com sucesso',
       };
 
@@ -156,7 +178,7 @@ export default class SubscriptionService {
       }
     }
 
-    async findFatures(userId) {
+    async findPlansAndInvoices(userId) {
       try {
         let invoice = await prisma.invoice.findMany({
           where: {
@@ -184,7 +206,31 @@ export default class SubscriptionService {
           }
         }))
 
-        return newInvoice
+        const subscription = await prisma.subscriptions.findFirst({
+          where: {
+              client: {
+                  userId: userId,
+              }
+          }
+        })
+
+        const plan  = await prisma.plan.findUnique({
+            where: {
+                id: subscription.planId,
+            },
+            select: {
+                id: true,
+                name: true,
+                actived: true,
+                dateCreated: true,
+                dateUpdated: true
+            }
+        })
+
+        return {
+          invoices: newInvoice,
+          plan: plan
+        }
         
       } catch (error) {
         return {
@@ -192,5 +238,7 @@ export default class SubscriptionService {
           error: error.message,
         };
       }
+
+      
     }
 }
