@@ -28,15 +28,25 @@ const Plans = () => {
   const [plan, setPlan] = useState()
   const [fatures, setFatures] = useState()
   const [messagePlan, setMessagePlan] = useState()
+  const [user, setUsuario] = useState()
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['plans'],
       queryFn: async () => {
+        if (localStorage.getItem('user') === null) {
+          const user = await userService.AboutUser();
+          localStorage.setItem('user', JSON.stringify(user));
+          setUsuario(user);
+        } else {
+          const user = JSON.parse(localStorage.getItem('user'));
+          setUsuario(user);
+        }
         const faturePlan = await paymentService.findPlanAndFatures()
         setFatures(faturePlan.invoices)
         setPlan(faturePlan.plan)
         return await paymentService.findAllPlans()
-      }
+      },
+      staleTime: Infinity
   })
 
   const navigatePage = useNavigate()
@@ -75,7 +85,7 @@ const Plans = () => {
         {data && data.map((p, i) => {
 
           const features = JSON.parse(p.resources)
-          const isMyPlan = plan && plan.id == p.id
+          const isMyPlan = user && user.plan.plan && user.plan.plan.id == p.id //plan && plan.id == p.id
 
           return (
             <div className={`pricing-card ${i === 1 ? "featured" : ""}`} key={p.id}>
@@ -96,7 +106,7 @@ const Plans = () => {
       <div className="invoices-section">
         <h2>Faturas pagas</h2>
         <div className="invoices-list">
-          {fatures && fatures.map((inv) => (
+          {user && user.invoices.map((inv) => (
             <div key={inv.id} className="invoice-item">
               <div className="invoice-left">
                 <span className="invoice-plan">Plano {inv.name}</span>

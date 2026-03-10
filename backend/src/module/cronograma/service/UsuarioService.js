@@ -104,4 +104,51 @@ export class UsuarioService {
 
     return { message: 'Email verificado com sucesso' }
   }
+
+  async aboultUser(userId) {
+    const user = await prisma.usuario.findUnique({ where: { id: userId }, select: {id: true, name: true, email: true, dateCreated: true } });
+    const plan = await prisma.subscriptions.findFirst({
+      where: {
+        client: {
+          userId: userId,
+        },
+      },
+      select: {
+        plan: {
+          select: {
+            id: true,
+            name: true,
+            price: true,
+          }
+        }
+      }
+    });
+    const invoices = await prisma.invoice.findMany({
+      where: {
+        subscription: {
+          client: {
+            userId: userId,
+          }
+        }
+      }
+    });
+
+    const newInvoice = await Promise.all(invoices.map(async(item) => {
+      const plan = await prisma.plan.findFirst({
+        where: {
+          price: item.price
+        }
+      })
+
+      return {
+        id: item.id,
+        name: plan.name,
+        price: plan.price,
+        status: item.status == "paid" ? "pago" : "pendente",
+        date: item.dateCreated
+      }
+    }))
+
+    return { user, plan, invoices:  newInvoice}
+  }
 }

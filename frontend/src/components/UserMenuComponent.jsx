@@ -1,10 +1,11 @@
-import { CiUser } from 'react-icons/ci';
+import { useNavigate } from 'react-router-dom';
 import '../styles/userMenu.css'
 import { useState, useRef, useEffect } from "react";
 
-export default function UserMenuComponent({user}) {
+export default function UserMenuComponent({children, name}) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
+  const navigate = useNavigate()
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -20,32 +21,33 @@ export default function UserMenuComponent({user}) {
     console.log("Selecionado:", option);
     if (option === "minha-conta") {
       // Redirecionar para a página de minha conta
-      window.location.href = "/usuario";
+      navigate("/usuario")
     } else if(option === "planos"){
       // Redirecionar para a página de planos
-      window.location.href = "/usuario/planos";
+      navigate("/usuario/planos")
     } else if(option === "logout"){
         localStorage.removeItem("jwtToken");
-        window.location.href = "/";
+        localStorage.removeItem("user");
+        navigate("/")
     }
     setOpen(false);
   };
 
   return (
     <div className="user-menu" ref={menuRef}>
-      <button
-        className={`user-btn ${open ? "active" : ""}`}
+      <div
+        className={`${open ? "active" : ""}`}
         onClick={() => setOpen((prev) => !prev)}
         aria-label="Menu do usuário"
       >
-        <CiUser/>
-      </button>
+        {children}
+      </div>
 
       {open && (
         <div className="dropdown">
           <div className="dropdown-header">
-            <div className="avatar">U</div>
-            <span className="dropdown-username">Meu Perfil</span>
+            <div className="avatar">{String(name).slice(0, 1)}</div>
+            <span className="dropdown-username">{name}</span>
           </div>
           <div className="dropdown-divider" />
           <button className="dropdown-item" onClick={() => handleOption("minha-conta")}>

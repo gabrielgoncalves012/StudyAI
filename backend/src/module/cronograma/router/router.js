@@ -16,6 +16,7 @@ const cronogramaController = new CronogramaController();
 router.post('/api/usuarios', usuarioController.createUser.bind(usuarioController));
 router.post('/api/usuarios/signin', usuarioController.signIn.bind(usuarioController));
 router.post('/api/usuarios/verify', usuarioController.verifyEmail.bind(usuarioController));
+router.get('/api/usuarios', verify, usuarioController.aboutUser.bind(usuarioController));
 
 router.post('/api/generate-question', verify, checkUsage("questoes"), questoesController.generateQuestion.bind(questoesController));
 router.get('/api/disciplines', questoesController.findAllDiscpipline.bind(questoesController));

@@ -143,7 +143,8 @@ export default function Home() {
       const myPlan = await paymentService.returnPlanActual()
       setPlan(myPlan)
       return await paymentService.findAllPlans()
-    }
+    },
+    staleTime: Infinity
   })
 
   const navigatePage = (data) => {

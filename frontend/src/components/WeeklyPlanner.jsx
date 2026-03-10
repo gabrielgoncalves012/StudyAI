@@ -3,7 +3,7 @@ import '../styles/weeklyPlanner.css';
 import { IoCalendarClearOutline } from 'react-icons/io5';
 import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
 
-const WeeklyPlanner = ({ planejamentos }) => {
+const WeeklyPlanner = ({ planejamentos, days, color }) => {
   const [currentWeek, setCurrentWeek] = useState(0);
   
   // Dias da semana em português
@@ -111,12 +111,18 @@ const WeeklyPlanner = ({ planejamentos }) => {
         {diasDaSemanaAtual.map((dia, index) => {
           const planejamentosDoDia = planejamentosPorDia[dia] || [];
           const nomeDiaSemana = weekDays[dia % 7] || weekDays[0]; // Fallback para domingo
+
+          const currentDayStyle = {
+            border: '2px solid '+color,
+          }
+
+          console.log('Planejamentos do dia:',  dia);
           
           return (
-            <div key={dia} className="day-card">
-              <div className="day-header">
+            <div key={dia} className={`day-card`} style={days() == dia ? currentDayStyle : {}}>
+              <div className="day-header" style={days() == dia ? {backgroundColor: color} : {}}>
                 <h2>{nomeDiaSemana}</h2>
-                <span className="day-number">Dia {dia}</span>
+                <span className="day-number">Dia {dia} {days() == dia ? '(Hoje)' : ''} </span>
               </div>
               
               <div className="day-content">

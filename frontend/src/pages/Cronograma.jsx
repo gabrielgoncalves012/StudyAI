@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { CronogramaService } from "../services/CronogramaService/CronogramService";
-import { IoBookOutline, IoTimeOutline, IoCalendarClearOutline } from "react-icons/io5";
+import { IoBookOutline, IoTimeOutline } from "react-icons/io5";
 import { FiTarget } from "react-icons/fi";
 import { GrBook } from "react-icons/gr";
 import { GoTrophy, } from "react-icons/go";
@@ -9,7 +9,7 @@ import { FaRegCircleCheck, FaRegCircle } from "react-icons/fa6";
 import { PiChartLineUp } from "react-icons/pi";
 import '../styles/cronograma.css'
 import ProgressBar from "../components/ProgressBar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import WeeklyPlanner from "../components/WeeklyPlanner";
 
 export default function Cronograma() {
@@ -47,12 +47,29 @@ export default function Cronograma() {
     }
 
     const HeaderStyle = {
-        'background-color': "#"+data.colorCode
+        'background-color': data.colorCode
     }
 
     async function checkTopic(id) {
         await cronogramaService.checkTopic(id)
         refetch()
+    }
+    function diasDesde(dataString) {
+        // Data fornecida
+        const dataPassada = new Date(dataString);
+        
+        // Data de hoje
+        const hoje = new Date();
+        
+        // Zerar horas, minutos, segundos e milissegundos
+        dataPassada.setUTCHours(0, 0, 0, 0);
+        hoje.setUTCHours(0, 0, 0, 0);
+        
+        // Calcular diferença em milissegundos e converter para dias
+        const diferencaMs = hoje - dataPassada;
+        const dias = Math.floor(diferencaMs / (1000 * 60 * 60 * 24));
+        
+        return dias;
     }
 
     return (
@@ -90,7 +107,7 @@ export default function Cronograma() {
                 <article className="progresso-container">
                         <h2>Seu progresso</h2>
                         <div>
-                            <ProgressBar feito={topicFinished} total={data.topicLength} color={"#"+data.colorCode}/>
+                            <ProgressBar feito={topicFinished} total={data.topicLength} color={data.colorCode}/>
                                 
                         </div>
                         <section className="progresso-topicos">
@@ -119,7 +136,7 @@ export default function Cronograma() {
                                 <div className="icon">
                                     <PiChartLineUp color="#f4c025"/>
                                 </div>
-                                <span className="value">2.1%</span>
+                                <span className="value">{Number((data.topicFinished / data.topicLength) * 100).toFixed(1)}%</span>
                                 <span className="label">Progresso</span>
                             </div>
                         </section>
@@ -127,7 +144,7 @@ export default function Cronograma() {
 
                 <article className="cronograma-container">
 
-                     <WeeklyPlanner planejamentos={data.planejamentos}/>
+                     <WeeklyPlanner planejamentos={data.planejamentos} days={() => diasDesde(data.dateCreated)} color={data.colorCode}/>
 
                 </article>
 
@@ -151,7 +168,7 @@ export default function Cronograma() {
                                         </div>
                                     </div>
                                     <div className="disciplina-progress">
-                                        <ProgressBar mini={true} color={"#"+data.colorCode} feito={disciplina.finished} total={disciplina.length} />
+                                        <ProgressBar mini={true} color={data.colorCode} feito={disciplina.finished} total={disciplina.length} />
                                     </div>
                                 </div>
                                 <ol className="disciplina-content" style={{ display: openDisciplinas[disciplina.id] ? 'flex' : 'none' }}>

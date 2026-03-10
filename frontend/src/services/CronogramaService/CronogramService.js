@@ -55,6 +55,17 @@ export class CronogramaService {
                         status: error.response.status,
                         data: error.response.data
                     };
+                } else if(error.response.data.limit > 0) {
+                    console.log(error.response.data.message)
+                    return {
+                        status: error.response.status,
+                        data: {
+                            message: error.response.data.message,
+                            description: error.response.data.message
+                        }
+                    };
+
+                    console.log(error.response.data.message)
                 }
             }
         }
