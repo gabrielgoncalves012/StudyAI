@@ -1,0 +1,249 @@
+/* ===== Plans & Invoices Page ===== */
+
+.plans-page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: #1a1a2e;
+  }
+  
+  .plans-page h1 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  
+  .plans-page .subtitle {
+    text-align: center;
+    color: #6b7280;
+    font-size: 1rem;
+    margin-bottom: 40px;
+  }
+  
+  /* ===== Plan Cards ===== */
+  
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-bottom: 64px;
+  }
+  
+  .plan-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+  }
+  
+  .plan-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+  }
+  
+  .plan-card.featured {
+    border: 2px solid #2563eb;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.12);
+  }
+  
+  .plan-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2563eb;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 16px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .plan-card h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  
+  .plan-price {
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  
+  .plan-price span {
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: #6b7280;
+  }
+  
+  .plan-desc {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-bottom: 20px;
+  }
+  
+  .plan-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 28px;
+    flex: 1;
+  }
+  
+  .plan-features li {
+    padding: 6px 0;
+    font-size: 0.9rem;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .plan-features li::before {
+    content: '✓';
+    color: #2563eb;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+  
+  .plan-btn {
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    text-align: center;
+  }
+  
+  .plan-btn:active {
+    transform: scale(0.97);
+  }
+  
+  .plan-btn.primary {
+    background: #2563eb;
+    color: #fff;
+  }
+  
+  .plan-btn.primary:hover {
+    background: #1d4ed8;
+  }
+  
+  .plan-btn.outline {
+    background: transparent;
+    color: #2563eb;
+    border: 1.5px solid #2563eb;
+  }
+  
+  .plan-btn.outline:hover {
+    background: #eff6ff;
+  }
+  
+  /* ===== Invoices Section ===== */
+  
+  .invoices-section h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  
+  .invoices-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .invoice-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px 20px;
+    transition: box-shadow 0.15s;
+  }
+  
+  .invoice-item:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  }
+  
+  .invoice-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .invoice-plan {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  
+  .invoice-date {
+    font-size: 0.8rem;
+    color: #6b7280;
+  }
+  
+  .invoice-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .invoice-amount {
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  
+  .invoice-status {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: #dcfce7;
+    color: #166534;
+  }
+  
+  .invoice-download {
+    background: none;
+    border: none;
+    color: #2563eb;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: underline;
+    padding: 0;
+  }
+  
+  .invoice-download:hover {
+    color: #1d4ed8;
+  }
+  
+  /* ===== Responsivo ===== */
+  
+  @media (max-width: 640px) {
+    .plans-page {
+      padding: 32px 16px;
+    }
+  
+    .invoice-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+  
+    .invoice-right {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+  

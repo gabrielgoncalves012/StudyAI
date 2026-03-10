@@ -20,8 +20,25 @@ model Usuario {
   email       String       @unique
   password    String
   verified   Boolean      @default(false)
+  isAdmin    Boolean      @default(false)
+  dateCreated DateTime     @default(now())
   cronogramas Cronograma[]
   tokens      VerificationToken[]
+  clientStripe ClientStripe[]
+  usage       Usage[]
+}
+
+model Usage {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  questoes    Int      @default(0)
+  cronogramas Int      @default(0)
+  isAccessCronograma Boolean  @default(false)
+  periodEnd   DateTime
+  dateCreated DateTime @default(now())
+  dateUpdated DateTime @updatedAt
+
+  usuario Usuario @relation(fields: [userId], references: [id])
 }
 
 model VerificationToken {
@@ -38,6 +55,7 @@ model VerificationToken {
 model Cronograma {
   id          String   @id @default(uuid())
   concurso    String
+  cargo       String @default("")
   emojCode    String
   colorCode   String
   accessDate  String
@@ -97,4 +115,77 @@ model Questoes {
   topico_especifico String
   disciplina String
   topico String
+}
+
+// Paymento ---------------
+
+model Plan {
+  id String @id @default(uuid())
+  name String
+  price Decimal
+  codigo String @unique
+  stripePriceId String @unique
+  resources Json
+  actived Boolean @default(true)
+  dateCreated DateTime @default(now())
+  dateUpdated DateTime @updatedAt
+
+  assinaturas Subscriptions[]
+}
+
+model ClientStripe {
+  id String @id @default(uuid())
+  name String
+  email String @unique
+  userId String
+  stripeCustomerId String @unique
+  actived Boolean @default(true)
+  dateCreated DateTime @default(now())
+  dateUpdated DateTime @updatedAt
+
+  usuario Usuario @relation(fields: [userId], references: [id])
+
+  assinaturas Subscriptions[]
+}
+
+model Subscriptions {
+  id String @id @default(uuid())
+  clientId String
+  planId String
+  stripeSubscriptionId String @unique
+  status String
+  currentPeriodStart DateTime
+  currentPeriodEnd DateTime
+  dateCreated DateTime @default(now())
+  dateUpdated DateTime @updatedAt
+
+  client ClientStripe @relation(fields: [clientId], references: [id])
+  plan Plan @relation(fields: [planId], references: [id])
+
+  invoices Invoice[]
+}
+
+model Invoice {
+  id String @id @default(uuid())
+  subscriptionId String
+  paymentId String
+  price Decimal
+  status String
+  datePayment DateTime
+  dateMaturity DateTime
+  ivoicePdf String
+  dateCreated DateTime @default(now())
+  dateUpdated DateTime @updatedAt
+
+  subscription Subscriptions @relation(fields: [subscriptionId], references: [id])
+}
+
+model WebhookEvent {
+  id String @id @default(uuid())
+  stripeEventId String @unique
+  type String
+  dateReceived DateTime @default(now())
+  processed Boolean @default(false)
+  dateProcessed DateTime
+  errorMessage String
 }

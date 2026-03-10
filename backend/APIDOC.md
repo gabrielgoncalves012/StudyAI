@@ -47,9 +47,64 @@ https://studyai.com.br
     }
 ```
 
+### Verificar codigo
+- **URL:** `/api/usuarios/verify/`
+- **Método:** `POST`
+- **Descrição:** Verifica se o codigo enviado é o mesmo recebido no email
+- **Body:** 
+```json
+{
+	"email": "pessoa3@pessoa",
+	"code": "601156"
+}
+```
+- **Resposta esperada:**
+```json
+{
+	"message": "Email verificado com sucesso"
+}
+```
+
 ---
 
 ## Rotas de Questões
+
+### Retornar todas as disciplinas
+- **URL:** `/api/disciplines/`
+- **Método:** `GET`
+- **Descrição:** Util para ao clicar no campo disciplinas, mostrar como autocomplate
+- **Resposta esperada:** 
+```json
+[
+	{
+		"id": "432cf9fa-8079-405f-bd19-85cbd127d76d",
+		"disciplina": "portugues"
+	}
+	{...}
+]
+```
+
+### Retornar topicos das disciplinas
+- **URL:** `/api/questions/`
+- **Método:** `POST`
+- **Descrição:** Util para ao clicar no campo topicos, mostrar como autocomplate
+- **Body:**
+```json
+{
+	"disciplina": "portugues"
+}
+```
+- **Resposta esperada:** 
+```json
+[
+	{
+		"id": "432cf9fa-8079-405f-bd19-85cbd127d76d",
+		"disciplina": "portugues",
+		"topico": "regencia verbal e nominal"
+	},
+	{...}
+]
+```
 
 ### Gerar Questão
 - **URL:** `/api/generate-question`

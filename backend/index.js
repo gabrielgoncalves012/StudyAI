@@ -1,19 +1,21 @@
+import 'dotenv/config';
 import express from 'express'
 import cors from 'cors'
-import { router } from './src/config/router.js'
-import e from 'express'
+import routerCronogram from './src/module/cronograma/router/router.js'
+import routerPayment from './src/module/pagamento/router/router.js'
 
 const app = express()
-
 
 app.use(cors({
   origin: 'http://localhost:5173', // porta do Vite
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }))
 
+app.use("/api/pay/webhook/stripe", express.raw({ type: "application/json" }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(router);
+app.use('/', routerCronogram.router)
+app.use('/api/pay', routerPayment.router)
 
 
 const PORT = process.env.PORT || 3333

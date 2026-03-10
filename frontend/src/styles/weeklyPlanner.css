@@ -1,0 +1,188 @@
+/* WeeklyPlanner.css */
+
+.weekly-planner {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+  
+  .cronograma-container .header-cronograma-container .end-container button {
+    background-color: var(--card-primary-light);
+    border: none;
+    border-radius: 8px;
+    padding: 0.7rem;
+    color: var(--card-bg);
+    font-size: 1.5rem;
+    font-weight: 600;
+    box-shadow: var(--card-shadow-md);
+    transition: all 0.3s ease;
+}
+
+.cronograma-container .header-cronograma-container .end-container button:disabled {
+    transform: translateY(-2px);
+    background-color: #57606f;
+    cursor: not-allowed ;
+  }
+
+  .cronograma-container .header-cronograma-container .end-container button:hover:disabled {
+    transform: translateY(-2px);
+    background-color: #57606f;
+    
+  }
+
+.cronograma-container .header-cronograma-container .end-container button:hover {
+    background-color: var(--card-primary);
+}
+  
+  .week-info {
+    font-weight: 500;
+    color: #555;
+    min-width: 150px;
+    text-align: center;
+  }
+  
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+  }
+  
+  .day-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-height: 300px;
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+  }
+  
+  .day-header h2 {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  
+  .day-number {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 2px 8px;
+    border-radius: 12px;
+  }
+  
+  .day-content {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    max-height: 350px;
+  }
+  
+  .subject-item {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .subject-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  
+  .subject-item h3 {
+    margin: 0 0 10px 0;
+    color: #444;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  
+  .topics-list {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 0.85rem;
+    color: #666;
+  }
+  
+  .topics-list li {
+    margin-bottom: 5px;
+    line-height: 1.4;
+  }
+  
+  .no-content {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    padding: 20px 0;
+  }
+  
+  .weekly-planner-empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Responsividade */
+  @media (max-width: 1000px) {
+    .week-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .week-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .planner-header {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .week-navigation {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .weekly-planner {
+      gap: 1rem;
+    }
+
+    .cronograma-container .header-cronograma-container .end-container button {
+      font-size: 1rem;
+    }
+
+    .cronograma-container span {
+      font-size: 0.8rem;
+    }
+
+    .cronograma-container h2 {
+      font-size: 1rem;
+    }
+
+    .cronograma-container h3 {
+      font-size: 0.8rem;
+    }
+
+    .cronograma-container li {
+      font-size: 0.7rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .week-grid {
+      grid-template-columns: 1fr;
+    }
+  }

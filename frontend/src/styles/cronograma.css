@@ -1,0 +1,297 @@
+:root {
+    --card-primary: #6366f1;
+    --card-primary-light: #818cf8;
+    --card-secondary: #06b6d4;
+    --card-accent: #8b5cf6;
+    --card-success: #10b981;
+    --card-warning: #f59e0b;
+    --card-bg: #ffffff;
+    --card-border: rgba(226, 232, 240, 0.8);
+    --card-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --card-shadow-md: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+    --card-shadow-lg: 0 10px 40px -4px rgba(0, 0, 0, 0.12);
+    --card-shadow-glow: 0 10px 40px rgba(99, 102, 241, 0.2);
+    --card-glow: 0 0 40px rgba(99, 102, 241, 0.15);
+    --card-gradient-tech: linear-gradient(135deg, 
+      rgba(99, 102, 241, 0.1) 0%, 
+      rgba(139, 92, 246, 0.05) 50%, 
+      rgba(6, 182, 212, 0.08) 100%
+    );
+    --card-border-radius: 16px;
+    --card-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --h1-font-size: 2.5rem;
+    --h2-font-size: 1.35rem;
+    --h3-font-size: 0.9rem;
+    --h4-font-size: 0.875rem;
+    --h5-font-size: 0.75rem;
+    --h6-font-size: 0.625rem;
+    --p-font-size: 1rem;
+
+    --icons-size-md: 1.5rem;
+    --icons-size-lg: 1.8rem;
+  }
+
+  .cronograma h2 {
+    font-size: var(--h2-font-size);
+  }
+
+.header-container {
+    margin: 0;
+    padding: 4rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.8rem;
+}
+
+.header-container .icons{
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.header-container .icon {
+    font-size: var(--icons-size-lg);
+    color: var(--card-bg);
+    background-color: var(--card-primary-light);
+    padding: 0.7rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--card-shadow-md);
+
+}
+
+.header-container h1 {
+    margin: 0;
+    padding: 0;
+    font-size: var(--h1-font-size);
+    color: #ffffff;
+}
+
+.header-container .subtitle {
+    font-size: var(--h2-font-size);
+    color: #767b83;
+    margin: 0;
+}
+
+.header-container .disciplinas{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.6rem;;
+}
+
+.header-container .disciplinas p {
+    font-size: var(--h5-font-size);
+    color: #ffffff;
+    background-color: var(--card-primary-light);
+    padding: 0.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--card-shadow-md);
+    /* remover o border */
+    border: none;
+}
+
+.progresso-container, .cronograma-container {
+    box-shadow: var(--card-shadow-lg);
+    border-radius: 8px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.progresso-container .progresso-topicos{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.progresso-container .progresso-topicos .item-progress {
+    background-color: #edf0f380;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.progresso-container .progresso-topicos .icon {
+    font-size: var(--icons-size-md);
+}
+
+.progresso-container .progresso-topicos .value {
+    font-size: var(--h2-font-size);
+    font-weight: 600;
+    color: #1e272e;
+}
+
+.progresso-container .progresso-topicos .label {
+    font-size: var(--p-font-size);
+}
+
+.cronograma-container .header-cronograma-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cronograma-container .header-cronograma-container .start-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+
+}
+
+.cronograma-container .header-cronograma-container .end-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cronograma-container .icon {
+    font-size: 1.5rem;
+    background-color: #f4c02533;
+    padding: 0.7rem;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow-md);
+}
+
+.cronograma .list-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.cronograma .list-container .disciplinas-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 0.7rem;
+}
+
+.cronograma .list-container .disciplinas-container .disciplina-container {
+    box-shadow: var(--card-shadow-md);
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.cronograma .list-container .disciplinas-container .disciplina-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cronograma .list-container .disciplinas-container .disciplina-header .disciplina-progress {
+    width: 100px;
+}
+
+.cronograma .list-container ol {
+    list-style: none;
+    padding: 1.5rem 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cronograma .list-container .topic-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background-color: #edf0f380;
+}
+
+.cronograma .list-container .topic-item:hover {
+    background-color: #edf0f3;
+    color: #57ce892a;
+    transform: translateY(-2px);
+}
+
+.cronograma .list-container h3 {
+    font-size: var(--h3-font-size);
+}
+
+.cronograma .list-container span {
+    font-size: var(--p-font-size);
+    color: #57606f;
+}
+
+.cronograma .list-container li {
+    font-size: var(--p-font-size);
+}
+
+.cronograma .disciplina-container .disciplina-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cronograma .disciplina-container .disciplina-info .disciplina-icon {
+    font-size: var(--icons-size-md);
+    background-color: #f4c02533;
+    padding: 0.7rem;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow-md);
+}
+
+.cronograma .footer {
+    border-top: 1px solid #edf0f3;
+    padding-top: 2rem;
+    padding-bottom: 4rem;
+    margin: 0 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+}
+
+@media screen and (max-width: 600px) {
+    :root {
+        --h1-font-size: 1.5rem;
+        --h2-font-size: 1rem;
+        --h3-font-size: 0.8rem;
+        --h5-font-size: 0.5rem;
+
+        --p-font-size: 0.7rem;
+
+        --icons-size-md: 1rem;
+        --icons-size-lg: 1.1rem;
+    }
+
+    .cronograma .progresso-container .progresso-topicos {
+        grid-template-columns: 1fr 1fr;
+    }
+}

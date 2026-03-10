@@ -1,0 +1,145 @@
+/* UserMenu.css */
+
+.user-menu {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Botão principal */
+  .user-btn {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 50%;
+    border: 2px solid #e2e8f0;
+    background: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    color: #475569;
+  }
+  
+  .user-btn:hover {
+    border-color: #6366f1;
+    color: #6366f1;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  }
+  
+  .user-btn.active {
+    border-color: #6366f1;
+    color: #6366f1;
+    background: #eef2ff;
+  }
+  
+  .user-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  /* Dropdown */
+  .dropdown {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    width: 210px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    animation: fadeIn 0.15s ease;
+    z-index: 1000;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Header do dropdown */
+  .dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    background: #f8fafc;
+  }
+  
+  .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #818cf8);
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  
+  .dropdown-username {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+  }
+  
+  /* Divider */
+  .dropdown-divider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 0;
+  }
+  
+  /* Itens */
+  .dropdown-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #374151;
+    text-align: left;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  
+  .dropdown-item svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+  
+  .dropdown-item:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+  }
+  
+  .dropdown-item:hover svg {
+    opacity: 1;
+  }
+  
+  .dropdown-item.danger {
+    color: #ef4444;
+  }
+  
+  .dropdown-item.danger svg {
+    opacity: 0.8;
+  }
+  
+  .dropdown-item.danger:hover {
+    background: #fef2f2;
+    color: #dc2626;
+  }
